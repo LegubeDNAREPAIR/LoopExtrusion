@@ -1,0 +1,119 @@
+# Raphael Mourad
+# 12/06/2019
+
+
+
+# Get inside Mars server
+ssh rmourad@10.2.0.208 
+
+
+
+# On the Mars server
+cd /bioinfo_legube/MOURAD
+mkdir HiC_Legube_DIvA_rep1
+mkdir HiC_Legube_DIvA_rep1/fastq
+mkdir HiC_Legube_DIvA_rep2
+mkdir HiC_Legube_DIvA_rep2/fastq
+mkdir HiC_Legube_OHT_rep1
+mkdir HiC_Legube_OHT_rep1/fastq
+mkdir HiC_Legube_OHT_rep2
+mkdir HiC_Legube_OHT_rep2/fastq
+mkdir Genomes
+mkdir Genomes/hg19
+
+# move files
+cp HiC_Coline/Clouaire_HTGLNBGXB/HTGLNBGXB_HiC-manipA_DIvA_19s003260-1-1_Clouaire_lane119s003260_*_sequence.txt.gz HiC_Legube_DIvA_rep1/fastq
+cp HiC_Coline/Clouaire_HTGTMBGXB/HTGTMBGXB_HiC-manipA_OHT_19s003261-1-1_Clouaire_lane119s003261_*_sequence.txt.gz HiC_Legube_OHT_rep1/fastq
+cp HiC/Clouaire_H5KTGBGXC/H5KTGBGXC_HiC-manipB_DIvA_19s003262-1-1_Clouaire_lane119s003262_*_sequence.txt.gz HiC_Legube_DIvA_rep2/fastq
+cp HiC/H75VVBGXC_HiC-manipB_OHT_19s003263-1-1_Clouaire_lane119s003263_*_sequence.txt.gz HiC_Legube_OHT_rep2/fastq
+
+
+# Change names
+mv HiC_Legube_DIvA_rep1/fastq/HTGLNBGXB_HiC-manipA_DIvA_19s003260-1-1_Clouaire_lane119s003260_1_sequence.txt.gz HiC_Legube_DIvA_rep1/fastq/HiC_rep1_R1.fastq.gz
+mv HiC_Legube_DIvA_rep1/fastq/HTGLNBGXB_HiC-manipA_DIvA_19s003260-1-1_Clouaire_lane119s003260_2_sequence.txt.gz HiC_Legube_DIvA_rep1/fastq/HiC_rep1_R2.fastq.gz
+
+mv HiC_Legube_DIvA_rep2/fastq/H5KTGBGXC_HiC-manipB_DIvA_19s003262-1-1_Clouaire_lane119s003262_1_sequence.txt.gz HiC_Legube_DIvA_rep2/fastq/HiC_rep2_R1.fastq.gz
+mv HiC_Legube_DIvA_rep2/fastq/H5KTGBGXC_HiC-manipB_DIvA_19s003262-1-1_Clouaire_lane119s003262_2_sequence.txt.gz HiC_Legube_DIvA_rep2/fastq/HiC_rep2_R2.fastq.gz
+
+mv HiC_Legube_OHT_rep1/fastq/HTGTMBGXB_HiC-manipA_OHT_19s003261-1-1_Clouaire_lane119s003261_1_sequence.txt.gz HiC_Legube_OHT_rep1/fastq/HiC_rep1_R1.fastq.gz
+mv HiC_Legube_OHT_rep1/fastq/HTGTMBGXB_HiC-manipA_OHT_19s003261-1-1_Clouaire_lane119s003261_2_sequence.txt.gz HiC_Legube_OHT_rep1/fastq/HiC_rep1_R2.fastq.gz
+
+mv HiC_Legube_OHT_rep2/fastq/H75VVBGXC_HiC-manipB_OHT_19s003263-1-1_Clouaire_lane119s003263_1_sequence.txt.gz HiC_Legube_OHT_rep2/fastq/HiC_rep2_R1.fastq.gz
+mv HiC_Legube_OHT_rep2/fastq/H75VVBGXC_HiC-manipB_OHT_19s003263-1-1_Clouaire_lane119s003263_2_sequence.txt.gz HiC_Legube_OHT_rep2/fastq/HiC_rep2_R2.fastq.gz
+
+# Download hg19 genome
+cd Genomes/hg19
+wget http://hgdownload.cse.ucsc.edu/goldenPath/hg19/bigZips/hg19.2bit
+wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/twoBitToFa 
+chmod 777 twoBitToFa 
+./twoBitToFa hg19.2bit hg19.fa
+
+# Index with bwa
+docker run -it -v /bioinfo_legube/MOURAD/Genomes/hg19:/dir mourad/bioinfo /bin/bash
+cd /dir
+bwa index hg19.fa
+exit
+
+# Compute restriction enzyme sites
+cd /bioinfo_legube/MOURAD
+nohup ./generate_site_positions.py DpnII hg19 Genomes/hg19/hg19.fa &
+mv hg19_DpnII.txt Genomes
+awk 'BEGIN{OFS="\t"}{print $1, $NF}' Genomes/hg19_DpnII.txt > Genomes/hg19.chrom.sizes
+
+
+# Run Juicer
+docker run -it --name papy1 -v /bioinfo_legube/MOURAD/HiC_Legube_DIvA_rep1:/HiC -v /bioinfo_legube/MOURAD/Genomes/:/Genome mourad/bioinfo /bin/bash
+mkdir /aidenlab/
+ln -s /opt/scripts /aidenlab/
+nohup scripts/juicer.sh -t 16 -d /HiC -z /Genome/hg19/hg19.fa -p /Genome/hg19.chrom.sizes -y /Genome/hg19_DpnII.txt -s DpnII > /HiC/nohup.out &
+#exit
+
+docker run -it --name papy2 -v /bioinfo_legube/MOURAD/HiC_Legube_DIvA_rep2:/HiC -v /bioinfo_legube/MOURAD/Genomes/:/Genome mourad/bioinfo /bin/bash
+mkdir /aidenlab/
+ln -s /opt/scripts /aidenlab/
+nohup scripts/juicer.sh -t 16 -d /HiC -z /Genome/hg19/hg19.fa -p /Genome/hg19.chrom.sizes -y /Genome/hg19_DpnII.txt -s DpnII > /HiC/nohup.out &
+#exit
+
+docker run -it --name papy3 -v /bioinfo_legube/MOURAD/HiC_Legube_OHT_rep1:/HiC -v /bioinfo_legube/MOURAD/Genomes/:/Genome mourad/bioinfo /bin/bash
+mkdir /aidenlab/
+ln -s /opt/scripts /aidenlab/
+nohup scripts/juicer.sh -t 16 -d /HiC -z /Genome/hg19/hg19.fa -p /Genome/hg19.chrom.sizes -y /Genome/hg19_DpnII.txt -s DpnII > /HiC/nohup.out &
+#exit
+
+docker run -it --name papy4 -v /bioinfo_legube/MOURAD/HiC_Legube_OHT_rep2:/HiC -v /bioinfo_legube/MOURAD/Genomes/:/Genome mourad/bioinfo /bin/bash
+mkdir /aidenlab/
+ln -s /opt/scripts /aidenlab/
+nohup scripts/juicer.sh -t 16 -d /HiC -z /Genome/hg19/hg19.fa -p /Genome/hg19.chrom.sizes -y /Genome/hg19_DpnII.txt -s DpnII > /HiC/nohup.out &
+#exit
+
+
+
+# Download results
+rsync -e ssh rmourad@10.2.0.208:/bioinfo_legube/MOURAD/HiC_Legube_DIvA_rep1/aligned/inter.hic /media/mourad/diskSave/MCF_Toulouse/recherche/LegubeTeam/data/HiC_Legube/hic/DIvA_rep1/
+rsync -e ssh rmourad@10.2.0.208:/bioinfo_legube/MOURAD/HiC_Legube_DIvA_rep1/aligned/inter_30.hic /media/mourad/diskSave/MCF_Toulouse/recherche/LegubeTeam/data/HiC_Legube/hic/DIvA_rep1/
+rsync -e ssh rmourad@10.2.0.208:/bioinfo_legube/MOURAD/HiC_Legube_DIvA_rep1/nohup.out /media/mourad/diskSave/MCF_Toulouse/recherche/LegubeTeam/data/HiC_Legube/hic/DIvA_rep1/
+
+rsync -e ssh rmourad@10.2.0.208:/bioinfo_legube/MOURAD/HiC_Legube_DIvA_rep2/aligned/inter.hic /media/mourad/diskSave/MCF_Toulouse/recherche/LegubeTeam/data/HiC_Legube/hic/DIvA_rep2/
+rsync -e ssh rmourad@10.2.0.208:/bioinfo_legube/MOURAD/HiC_Legube_DIvA_rep2/aligned/inter_30.hic /media/mourad/diskSave/MCF_Toulouse/recherche/LegubeTeam/data/HiC_Legube/hic/DIvA_rep2/
+rsync -e ssh rmourad@10.2.0.208:/bioinfo_legube/MOURAD/HiC_Legube_DIvA_rep2/nohup.out /media/mourad/diskSave/MCF_Toulouse/recherche/LegubeTeam/data/HiC_Legube/hic/DIvA_rep2/
+rsync -e ssh rmourad@10.2.0.208:/bioinfo_legube/MOURAD/HiC_Legube_DIvA_rep2/aligned/merged_nodups.txt /media/mourad/diskSave/MCF_Toulouse/recherche/LegubeTeam/data/HiC_Legube/hic/DIvA_rep2/
+
+rsync -e ssh rmourad@10.2.0.208:/bioinfo_legube/MOURAD/HiC_Legube_OHT_rep1/aligned/inter.hic /media/mourad/diskSave/MCF_Toulouse/recherche/LegubeTeam/data/HiC_Legube/hic/OHT_rep1/
+rsync -e ssh rmourad@10.2.0.208:/bioinfo_legube/MOURAD/HiC_Legube_OHT_rep1/aligned/inter_30.hic /media/mourad/diskSave/MCF_Toulouse/recherche/LegubeTeam/data/HiC_Legube/hic/OHT_rep1/
+rsync -e ssh rmourad@10.2.0.208:/bioinfo_legube/MOURAD/HiC_Legube_OHT_rep1/nohup.out /media/mourad/diskSave/MCF_Toulouse/recherche/LegubeTeam/data/HiC_Legube/hic/OHT_rep1/
+
+rsync -e ssh rmourad@10.2.0.208:/bioinfo_legube/MOURAD/HiC_Legube_OHT_rep2/aligned/inter.hic /media/mourad/diskSave/MCF_Toulouse/recherche/LegubeTeam/data/HiC_Legube/hic/OHT_rep2/
+rsync -e ssh rmourad@10.2.0.208:/bioinfo_legube/MOURAD/HiC_Legube_OHT_rep2/aligned/inter_30.hic /media/mourad/diskSave/MCF_Toulouse/recherche/LegubeTeam/data/HiC_Legube/hic/OHT_rep2/
+rsync -e ssh rmourad@10.2.0.208:/bioinfo_legube/MOURAD/HiC_Legube_OHT_rep2/nohup.out /media/mourad/diskSave/MCF_Toulouse/recherche/LegubeTeam/data/HiC_Legube/hic/OHT_rep2/
+
+
+
+# Kill docker
+docker stop papy && docker rm papy
+
+
+
+
+
+
+

@@ -1,0 +1,228 @@
+IN="/home/rochevin/Documents/PROJET_INGE/4CSeq_PROCESS_VINCENT/AFTER_EVA_PROCESSING/4C_ALN_TRANS/BAM/"
+OUT="/home/rochevin/Documents/PROJET_INGE/4CSeq_PROCESS_VINCENT/AFTER_EVA_PROCESSING/4C_ALN_TRANS/BAMCOMPARE/"
+
+
+FILES = {
+	"4C-Seq_C_pvsmOHT_Legube_chr21_33251469-33252587":["4C-Seq_C_Legube_1_fastq_after_trimming_chr21_33251469-33252587","4C-Seq_C_Legube_2_fastq_after_trimming_chr21_33251469-33252587"],
+	"4C-Seq_C_pvsmOHT_Legube_chr1_89455867-89456712":["4C-Seq_C_Legube_1_fastq_after_trimming_chr1_89455867-89456712","4C-Seq_C_Legube_2_fastq_after_trimming_chr1_89455867-89456712"],
+	"4C-Seq_C_pvsmOHT_Legube_chr17_57168614-57169531":["4C-Seq_C_Legube_1_fastq_after_trimming_chr17_57168614-57169531","4C-Seq_C_Legube_2_fastq_after_trimming_chr17_57168614-57169531"],
+	"4C-Seq_C_pvsmOHT_Legube_chr17_45759770-45760603.bw":["4C-Seq_C_Legube_1_fastq_after_trimming_chr17_45759770-45760603","4C-Seq_C_Legube_2_fastq_after_trimming_chr17_45759770-45760603"],
+	"4C-Seq_A_pvsmOHT_Legube_chr21_33251469-33252587.bw":["4Cseq-LBCMCP-index1_S1_all_R1_001_cutadapt_chr21_33251469-33252587","4Cseq-LBCMCP-index2_S2_all_R1_001_cutadapt_chr21_33251469-33252587"],
+	"4C-Seq_A_pvsmOHT_Legube_chr21_32863772-32864618.bw":["4Cseq-LBCMCP-index1_S1_all_R1_001_cutadapt_chr21_32863772-32864618","4Cseq-LBCMCP-index2_S2_all_R1_001_cutadapt_chr21_32863772-32864618"],
+	"4C-Seq_A_pvsmOHT_Legube_chr1_90042784-90045873.bw":["4Cseq-LBCMCP-index1_S1_all_R1_001_cutadapt_chr1_90042784-90045873","4Cseq-LBCMCP-index2_S2_all_R1_001_cutadapt_chr1_90042784-90045873"],
+	"4C-Seq_A_pvsmOHT_Legube_chr1_89659070-89659811.bw":["4Cseq-LBCMCP-index1_S1_all_R1_001_cutadapt_chr1_89659070-89659811","4Cseq-LBCMCP-index2_S2_all_R1_001_cutadapt_chr1_89659070-89659811"],
+	"4C-Seq_A_pvsmOHT_Legube_chr1_89455867-89456712.bw":["4Cseq-LBCMCP-index1_S1_all_R1_001_cutadapt_chr1_89455867-89456712","4Cseq-LBCMCP-index2_S2_all_R1_001_cutadapt_chr1_89455867-89456712"],
+	"4C-Seq_A_pvsmOHT_Legube_chr1_88985251-88986220.bw":["4Cseq-LBCMCP-index1_S1_all_R1_001_cutadapt_chr1_88985251-88986220","4Cseq-LBCMCP-index2_S2_all_R1_001_cutadapt_chr1_88985251-88986220"],
+	"4C-Seq_A_pvsmOHT_Legube_chr1_80484021-80485207.bw":["4Cseq-LBCMCP-index1_S1_all_R1_001_cutadapt_chr1_80484021-80485207","4Cseq-LBCMCP-index2_S2_all_R1_001_cutadapt_chr1_80484021-80485207"],
+	"4C-Seq_A_pvsmOHT_Legube_chr17_57578597-57579677.bw":["4Cseq-LBCMCP-index1_S1_all_R1_001_cutadapt_chr17_57578597-57579677","4Cseq-LBCMCP-index2_S2_all_R1_001_cutadapt_chr17_57578597-57579677"],
+	"4C-Seq_A_pvsmOHT_Legube_chr17_45759770-45760603.bw":["4Cseq-LBCMCP-index1_S1_all_R1_001_cutadapt_chr17_45759770-45760603","4Cseq-LBCMCP-index2_S2_all_R1_001_cutadapt_chr17_45759770-45760603"],
+	"4C-Seq_A_pvsmOHT_Legube_chr17_57168614-57169531.bw":["4Cseq-LBCMCP-index1_S1_all_R1_001_cutadapt_chr17_57168614-57169531","4Cseq-LBCMCP-index2_S2_all_R1_001_cutadapt_chr17_57168614-57169531"],
+	"4C-Seq_Dbis_pvsmOHT_Legube_chr1_89455867-89456712.bw":["4C-Seq-Dbis-Legube-Banque1_S1_all_R1_001_cutadapt_chr1_89455867-89456712","4C-Seq-Dbis-Legube-Banque2_S2_all_R1_001_cutadapt_chr1_89455867-89456712"],
+	"4C-Seq_Dbis_pvsmOHT_Legube_chr20_30946314-30947710.bw":["4C-Seq-Dbis-Legube-Banque1_S1_all_R1_001_cutadapt_chr20_30946314-30947710","4C-Seq-Dbis-Legube-Banque2_S2_all_R1_001_cutadapt_chr20_30946314-30947710"],
+	"4C-Seq_D_pvsmOHT_Legube_chr17_45759770-45760603.bw":["4C-Seq-D-Legube-Banque1_S1_all_R1_001_cutadapt_chr17_45759770-45760603","4C-Seq-D-Legube-Banque2_S2_all_R1_001_cutadapt_chr17_45759770-45760603"],
+	"4C-Seq_D_pvsmOHT_Legube_chr1_89455867-89456712.bw":["4C-Seq-D-Legube-Banque1_S1_all_R1_001_cutadapt_chr1_89455867-89456712","4C-Seq-D-Legube-Banque2_S2_all_R1_001_cutadapt_chr1_89455867-89456712"],
+	"4C-Seq_D_pvsmOHT_Legube_chr21_33251469-33252587.bw":["4C-Seq-D-Legube-Banque1_S1_all_R1_001_cutadapt_chr21_33251469-33252587","4C-Seq-D-Legube-Banque2_S2_all_R1_001_cutadapt_chr21_33251469-33252587"],
+	"4C-Seq_D_pvsmOHT_Legube_chr17_57168614-57169531.bw":["4C-Seq-D-Legube-Banque1_S1_all_R1_001_cutadapt_chr17_57168614-57169531","4C-Seq-D-Legube-Banque2_S2_all_R1_001_cutadapt_chr17_57168614-57169531"],
+
+	"4C-seq-F-Legube_pvsmOHT_G1_chr17_45759770-45760603":["4C-seq-F-Legube_1_fastq_after_trimming_chr17_45759770-45760603","4C-seq-F-Legube_2_fastq_after_trimming_chr17_45759770-45760603"],
+	"4C-seq-F-Legube_pvsmOHT_G2_chr17_45759770-45760603":["4C-seq-F-Legube_3_fastq_after_trimming_chr17_45759770-45760603","4C-seq-F-Legube_4_fastq_after_trimming_chr17_45759770-45760603"],
+	"4C-seq-F-Legube_pvsmOHT_S_chr17_45759770-45760603":["4C-seq-F-Legube_5_fastq_after_trimming_chr17_45759770-45760603","4C-seq-F-Legube_6_fastq_after_trimming_chr17_45759770-45760603"],
+	"4C-seq-F-Legube_pvsmOHT_G1_chr17_57168614-57169531":["4C-seq-F-Legube_1_fastq_after_trimming_chr17_57168614-57169531","4C-seq-F-Legube_2_fastq_after_trimming_chr17_57168614-57169531"],
+	"4C-seq-F-Legube_pvsmOHT_G2_chr17_57168614-57169531":["4C-seq-F-Legube_3_fastq_after_trimming_chr17_57168614-57169531","4C-seq-F-Legube_4_fastq_after_trimming_chr17_57168614-57169531"],
+	"4C-seq-F-Legube_pvsmOHT_S_chr17_57168614-57169531":["4C-seq-F-Legube_5_fastq_after_trimming_chr17_57168614-57169531","4C-seq-F-Legube_6_fastq_after_trimming_chr17_57168614-57169531"],
+	"4C-seq-F-Legube_pvsmOHT_G1_chr1_89455867-89456712":["4C-seq-F-Legube_1_fastq_after_trimming_chr1_89455867-89456712","4C-seq-F-Legube_2_fastq_after_trimming_chr1_89455867-89456712"],
+	"4C-seq-F-Legube_pvsmOHT_G2_chr1_89455867-89456712":["4C-seq-F-Legube_3_fastq_after_trimming_chr1_89455867-89456712","4C-seq-F-Legube_4_fastq_after_trimming_chr1_89455867-89456712"],
+	"4C-seq-F-Legube_pvsmOHT_S_chr1_89455867-89456712":["4C-seq-F-Legube_5_fastq_after_trimming_chr1_89455867-89456712","4C-seq-F-Legube_6_fastq_after_trimming_chr1_89455867-89456712"],
+	"4C-seq-F-Legube_pvsmOHT_G1_chr20_30946314-30947710":["4C-seq-F-Legube_1_fastq_after_trimming_chr20_30946314-30947710","4C-seq-F-Legube_2_fastq_after_trimming_chr20_30946314-30947710"],
+	"4C-seq-F-Legube_pvsmOHT_G2_chr20_30946314-30947710":["4C-seq-F-Legube_3_fastq_after_trimming_chr20_30946314-30947710","4C-seq-F-Legube_4_fastq_after_trimming_chr20_30946314-30947710"],
+	"4C-seq-F-Legube_pvsmOHT_S_chr20_30946314-30947710":["4C-seq-F-Legube_5_fastq_after_trimming_chr20_30946314-30947710","4C-seq-F-Legube_6_fastq_after_trimming_chr20_30946314-30947710"],
+	"4C-seq-F-Legube_pvsmOHT_G1_chr21_33251469-33252587":["4C-seq-F-Legube_1_fastq_after_trimming_chr21_33251469-33252587","4C-seq-F-Legube_2_fastq_after_trimming_chr21_33251469-33252587"],
+	"4C-seq-F-Legube_pvsmOHT_G2_chr21_33251469-33252587":["4C-seq-F-Legube_3_fastq_after_trimming_chr21_33251469-33252587","4C-seq-F-Legube_4_fastq_after_trimming_chr21_33251469-33252587"],
+	"4C-seq-F-Legube_pvsmOHT_S_chr21_33251469-33252587":["4C-seq-F-Legube_5_fastq_after_trimming_chr21_33251469-33252587","4C-seq-F-Legube_6_fastq_after_trimming_chr21_33251469-33252587"],
+
+	"4C-seq_E-Legube_p24vsmOHT_chr17_45759770-45760603":["4C-seq_E-Legube_1_S1_all_R1_001_cutadapt_chr17_45759770-45760603","4C-seq_E-Legube_2_S2_all_R1_001_cutadapt_chr17_45759770-45760603"],
+	"4C-seq_E-Legube_p24vsmOHT_chr17_57168614-57169531":["4C-seq_E-Legube_1_S1_all_R1_001_cutadapt_chr17_57168614-57169531","4C-seq_E-Legube_2_S2_all_R1_001_cutadapt_chr17_57168614-57169531"],
+	"4C-seq_E-Legube_p24vsmOHT_chr1_89455867-89456712":["4C-seq_E-Legube_1_S1_all_R1_001_cutadapt_chr1_89455867-89456712","4C-seq_E-Legube_2_S2_all_R1_001_cutadapt_chr1_89455867-89456712"],
+	"4C-seq_E-Legube_p24vsmOHT_chr1_90292860-90295480":["4C-seq_E-Legube_1_S1_all_R1_001_cutadapt_chr1_90292860-90295480","4C-seq_E-Legube_2_S2_all_R1_001_cutadapt_chr1_90292860-90295480"],
+	"4C-seq_E-Legube_p24vsmOHT_chr20_30946314-30947710":["4C-seq_E-Legube_1_S1_all_R1_001_cutadapt_chr20_30946314-30947710","4C-seq_E-Legube_2_S2_all_R1_001_cutadapt_chr20_30946314-30947710"],
+	"4C-seq_E-Legube_p24vsmOHT_chr21_33251469-33252587":["4C-seq_E-Legube_1_S1_all_R1_001_cutadapt_chr21_33251469-33252587","4C-seq_E-Legube_2_S2_all_R1_001_cutadapt_chr21_33251469-33252587"],
+
+	"4C-Seq_C_pATMivsmOHT_Legube_chr21_33251469-33252587":["4C-Seq_C_Legube_1_fastq_after_trimming_chr21_33251469-33252587","4C-Seq_C_Legube_4_fastq_after_trimming_chr21_33251469-33252587"],
+	"4C-Seq_C_pATMivsmOHT_Legube_chr1_89455867-89456712":["4C-Seq_C_Legube_1_fastq_after_trimming_chr1_89455867-89456712","4C-Seq_C_Legube_4_fastq_after_trimming_chr1_89455867-89456712"],
+	"4C-Seq_C_pATMivsmOHT_Legube_chr17_57168614-57169531":["4C-Seq_C_Legube_1_fastq_after_trimming_chr17_57168614-57169531","4C-Seq_C_Legube_4_fastq_after_trimming_chr17_57168614-57169531"],
+	"4C-Seq_C_pATMivsmOHT_Legube_chr17_45759770-45760603.bw":["4C-Seq_C_Legube_1_fastq_after_trimming_chr17_45759770-45760603","4C-Seq_C_Legube_4_fastq_after_trimming_chr17_45759770-45760603"],
+	"4C-Seq_Dbis_pATMivsmOHT_Legube_chr1_89455867-89456712.bw":["4C-Seq-Dbis-Legube-Banque1_S1_all_R1_001_cutadapt_chr1_89455867-89456712","4C-Seq-Dbis-Legube-Banque4_S4_all_R1_001_cutadapt_chr1_89455867-89456712"],
+	"4C-Seq_Dbis_pATMivsmOHT_Legube_chr20_30946314-30947710.bw":["4C-Seq-Dbis-Legube-Banque1_S1_all_R1_001_cutadapt_chr20_30946314-30947710","4C-Seq-Dbis-Legube-Banque4_S4_all_R1_001_cutadapt_chr20_30946314-30947710"],
+	"4C-Seq_D_pATMivsmOHT_Legube_chr17_45759770-45760603.bw":["4C-Seq-D-Legube-Banque1_S1_all_R1_001_cutadapt_chr17_45759770-45760603","4C-Seq-D-Legube-Banque4_S4_all_R1_001_cutadapt_chr17_45759770-45760603"],
+	"4C-Seq_D_pATMivsmOHT_Legube_chr1_89455867-89456712.bw":["4C-Seq-D-Legube-Banque1_S1_all_R1_001_cutadapt_chr1_89455867-89456712","4C-Seq-D-Legube-Banque4_S4_all_R1_001_cutadapt_chr1_89455867-89456712"],
+	"4C-Seq_D_pATMivsmOHT_Legube_chr21_33251469-33252587.bw":["4C-Seq-D-Legube-Banque1_S1_all_R1_001_cutadapt_chr21_33251469-33252587","4C-Seq-D-Legube-Banque4_S4_all_R1_001_cutadapt_chr21_33251469-33252587"],
+	"4C-Seq_D_pATMivsmOHT_Legube_chr17_57168614-57169531.bw":["4C-Seq-D-Legube-Banque1_S1_all_R1_001_cutadapt_chr17_57168614-57169531","4C-Seq-D-Legube-Banque4_S4_all_R1_001_cutadapt_chr17_57168614-57169531"],
+	
+	"4C-Seq_C_pDNAPKivsmOHT_Legube_chr21_33251469-33252587":["4C-Seq_C_Legube_1_fastq_after_trimming_chr21_33251469-33252587","4C-Seq_C_Legube_3_fastq_after_trimming_chr21_33251469-33252587"],
+	"4C-Seq_C_pDNAPKivsmOHT_Legube_chr1_89455867-89456712":["4C-Seq_C_Legube_1_fastq_after_trimming_chr1_89455867-89456712","4C-Seq_C_Legube_3_fastq_after_trimming_chr1_89455867-89456712"],
+	"4C-Seq_C_pDNAPKivsmOHT_Legube_chr17_57168614-57169531":["4C-Seq_C_Legube_1_fastq_after_trimming_chr17_57168614-57169531","4C-Seq_C_Legube_3_fastq_after_trimming_chr17_57168614-57169531"],
+	"4C-Seq_C_pDNAPKivsmOHT_Legube_chr17_45759770-45760603.bw":["4C-Seq_C_Legube_1_fastq_after_trimming_chr17_45759770-45760603","4C-Seq_C_Legube_3_fastq_after_trimming_chr17_45759770-45760603"],
+	"4C-Seq_Dbis_pDNAPKivsmOHT_Legube_chr1_89455867-89456712.bw":["4C-Seq-Dbis-Legube-Banque1_S1_all_R1_001_cutadapt_chr1_89455867-89456712","4C-Seq-Dbis-Legube-Banque3_S3_all_R1_001_cutadapt_chr1_89455867-89456712"],
+	"4C-Seq_Dbis_pDNAPKivsmOHT_Legube_chr20_30946314-30947710.bw":["4C-Seq-Dbis-Legube-Banque1_S1_all_R1_001_cutadapt_chr20_30946314-30947710","4C-Seq-Dbis-Legube-Banque3_S3_all_R1_001_cutadapt_chr20_30946314-30947710"],
+	"4C-Seq_D_pDNAPKivsmOHT_Legube_chr17_45759770-45760603.bw":["4C-Seq-D-Legube-Banque1_S1_all_R1_001_cutadapt_chr17_45759770-45760603","4C-Seq-D-Legube-Banque3_S3_all_R1_001_cutadapt_chr17_45759770-45760603"],
+	"4C-Seq_D_pDNAPKivsmOHT_Legube_chr1_89455867-89456712.bw":["4C-Seq-D-Legube-Banque1_S1_all_R1_001_cutadapt_chr1_89455867-89456712","4C-Seq-D-Legube-Banque3_S3_all_R1_001_cutadapt_chr1_89455867-89456712"],
+	"4C-Seq_D_pDNAPKivsmOHT_Legube_chr21_33251469-33252587.bw":["4C-Seq-D-Legube-Banque1_S1_all_R1_001_cutadapt_chr21_33251469-33252587","4C-Seq-D-Legube-Banque3_S3_all_R1_001_cutadapt_chr21_33251469-33252587"],
+	"4C-Seq_D_pDNAPKivsmOHT_Legube_chr17_57168614-57169531.bw":["4C-Seq-D-Legube-Banque1_S1_all_R1_001_cutadapt_chr17_57168614-57169531","4C-Seq-D-Legube-Banque3_S3_all_R1_001_cutadapt_chr17_57168614-57169531"],
+
+
+	"LEGU-G_pvsmOHT_siCTRL_chr17_45759770-45760603":["LEGU-7_1_fastq_after_trimming_chr17_45759770-45760603","LEGU-7_2_fastq_after_trimming_chr17_45759770-45760603"],
+	"LEGU-G_pvsmOHT_siCTRL_chr17_57168614-57169531":["LEGU-7_1_fastq_after_trimming_chr17_57168614-57169531","LEGU-7_2_fastq_after_trimming_chr17_57168614-57169531"],
+	"LEGU-G_pvsmOHT_siCTRL_chr1_89455867-89456712":["LEGU-7_1_fastq_after_trimming_chr1_89455867-89456712","LEGU-7_2_fastq_after_trimming_chr1_89455867-89456712"],
+	"LEGU-G_pvsmOHT_siCTRL_chr20_30946314-30947710":["LEGU-7_1_fastq_after_trimming_chr20_30946314-30947710","LEGU-7_2_fastq_after_trimming_chr20_30946314-30947710"],
+	"LEGU-G_pvsmOHT_siCTRL_chr21_33251469-33252587":["LEGU-7_1_fastq_after_trimming_chr21_33251469-33252587","LEGU-7_2_fastq_after_trimming_chr21_33251469-33252587"],
+	"LEGU-H_pvsmOHT_siCTRL_chr17_45759770-45760603":["LEGU-8_1_fastq_after_trimming_chr17_45759770-45760603","LEGU-8_2_fastq_after_trimming_chr17_45759770-45760603"],
+	"LEGU-H_pvsmOHT_siCTRL_chr17_57168614-57169531":["LEGU-8_1_fastq_after_trimming_chr17_57168614-57169531","LEGU-8_2_fastq_after_trimming_chr17_57168614-57169531"],
+	"LEGU-H_pvsmOHT_siCTRL_chr1_89455867-89456712":["LEGU-8_1_fastq_after_trimming_chr1_89455867-89456712","LEGU-8_2_fastq_after_trimming_chr1_89455867-89456712"],
+	"LEGU-H_pvsmOHT_siCTRL_chr20_30946314-30947710":["LEGU-8_1_fastq_after_trimming_chr20_30946314-30947710","LEGU-8_2_fastq_after_trimming_chr20_30946314-30947710"],
+	"LEGU-H_pvsmOHT_siCTRL_chr21_33251469-33252587":["LEGU-8_1_fastq_after_trimming_chr21_33251469-33252587","LEGU-8_2_fastq_after_trimming_chr21_33251469-33252587"],
+
+
+	"LEGU-G_pvsmOHT_siSCC1_chr17_45759770-45760603":["LEGU-7_3_fastq_after_trimming_chr17_45759770-45760603","LEGU-7_4_fastq_after_trimming_chr17_45759770-45760603"],
+	"LEGU-G_pvsmOHT_siSCC1_chr17_57168614-57169531":["LEGU-7_3_fastq_after_trimming_chr17_57168614-57169531","LEGU-7_4_fastq_after_trimming_chr17_57168614-57169531"],
+	"LEGU-G_pvsmOHT_siSCC1_chr1_89455867-89456712":["LEGU-7_3_fastq_after_trimming_chr1_89455867-89456712","LEGU-7_4_fastq_after_trimming_chr1_89455867-89456712"],
+	"LEGU-G_pvsmOHT_siSCC1_chr20_30946314-30947710":["LEGU-7_3_fastq_after_trimming_chr20_30946314-30947710","LEGU-7_4_fastq_after_trimming_chr20_30946314-30947710"],
+	"LEGU-G_pvsmOHT_siSCC1_chr21_33251469-33252587":["LEGU-7_3_fastq_after_trimming_chr21_33251469-33252587","LEGU-7_4_fastq_after_trimming_chr21_33251469-33252587"],
+	"LEGU-H_pvsmOHT_siSCC1_chr17_45759770-45760603":["LEGU-8_3_fastq_after_trimming_chr17_45759770-45760603","LEGU-8_4_fastq_after_trimming_chr17_45759770-45760603"],
+	"LEGU-H_pvsmOHT_siSCC1_chr17_57168614-57169531":["LEGU-8_3_fastq_after_trimming_chr17_57168614-57169531","LEGU-8_4_fastq_after_trimming_chr17_57168614-57169531"],
+	"LEGU-H_pvsmOHT_siSCC1_chr1_89455867-89456712":["LEGU-8_3_fastq_after_trimming_chr1_89455867-89456712","LEGU-8_4_fastq_after_trimming_chr1_89455867-89456712"],
+	"LEGU-H_pvsmOHT_siSCC1_chr20_30946314-30947710":["LEGU-8_3_fastq_after_trimming_chr20_30946314-30947710","LEGU-8_4_fastq_after_trimming_chr20_30946314-30947710"],
+	"LEGU-H_pvsmOHT_siSCC1_chr21_33251469-33252587":["LEGU-8_3_fastq_after_trimming_chr21_33251469-33252587","LEGU-8_4_fastq_after_trimming_chr21_33251469-33252587"],
+
+
+	"LEGU-G_pvsmOHT_siCTCF_chr17_45759770-45760603":["LEGU-7_5_fastq_after_trimming_chr17_45759770-45760603","LEGU-7_6_fastq_after_trimming_chr17_45759770-45760603"],
+	"LEGU-G_pvsmOHT_siCTCF_chr17_57168614-57169531":["LEGU-7_5_fastq_after_trimming_chr17_57168614-57169531","LEGU-7_6_fastq_after_trimming_chr17_57168614-57169531"],
+	"LEGU-G_pvsmOHT_siCTCF_chr1_89455867-89456712":["LEGU-7_5_fastq_after_trimming_chr1_89455867-89456712","LEGU-7_6_fastq_after_trimming_chr1_89455867-89456712"],
+	"LEGU-G_pvsmOHT_siCTCF_chr20_30946314-30947710":["LEGU-7_5_fastq_after_trimming_chr20_30946314-30947710","LEGU-7_6_fastq_after_trimming_chr20_30946314-30947710"],
+	"LEGU-G_pvsmOHT_siCTCF_chr21_33251469-33252587":["LEGU-7_5_fastq_after_trimming_chr21_33251469-33252587","LEGU-7_6_fastq_after_trimming_chr21_33251469-33252587"],
+	"LEGU-H_pvsmOHT_siCTCF_chr17_45759770-45760603":["LEGU-8_5_fastq_after_trimming_chr17_45759770-45760603","LEGU-8_6_fastq_after_trimming_chr17_45759770-45760603"],
+	"LEGU-H_pvsmOHT_siCTCF_chr17_57168614-57169531":["LEGU-8_5_fastq_after_trimming_chr17_57168614-57169531","LEGU-8_6_fastq_after_trimming_chr17_57168614-57169531"],
+	"LEGU-H_pvsmOHT_siCTCF_chr1_89455867-89456712":["LEGU-8_5_fastq_after_trimming_chr1_89455867-89456712","LEGU-8_6_fastq_after_trimming_chr1_89455867-89456712"],
+	"LEGU-H_pvsmOHT_siCTCF_chr20_30946314-30947710":["LEGU-8_5_fastq_after_trimming_chr20_30946314-30947710","LEGU-8_6_fastq_after_trimming_chr20_30946314-30947710"],
+	"LEGU-H_pvsmOHT_siCTCF_chr21_33251469-33252587":["LEGU-8_5_fastq_after_trimming_chr21_33251469-33252587","LEGU-8_6_fastq_after_trimming_chr21_33251469-33252587"],
+
+
+
+
+
+	"4C-Seq-K_pvsmOHT_siCTRL_chr17_45759770-45760603":["4C-Seq-K_1_S1_all_R1_001_cutadapt_chr17_45759770-45760603","4C-Seq-K_2_S2_all_R1_001_cutadapt_chr17_45759770-45760603"],
+	"4C-Seq-K_pvsmOHT_siSCC1_chr17_45759770-45760603":["4C-Seq-K_3_S3_all_R1_001_cutadapt_chr17_45759770-45760603","4C-Seq-K_4_S4_all_R1_001_cutadapt_chr17_45759770-45760603"],
+	"4C-Seq-K_pvsmOHT_siCTCF_chr17_45759770-45760603":["4C-Seq-K_5_S5_all_R1_001_cutadapt_chr17_45759770-45760603","4C-Seq-K_6_S6_all_R1_001_cutadapt_chr17_45759770-45760603"],
+	"4C-Seq-K_pvsmOHT_siCTRL_chr17_57168614-57169531":["4C-Seq-K_1_S1_all_R1_001_cutadapt_chr17_57168614-57169531","4C-Seq-K_2_S2_all_R1_001_cutadapt_chr17_57168614-57169531"],
+	"4C-Seq-K_pvsmOHT_siSCC1_chr17_57168614-57169531":["4C-Seq-K_3_S3_all_R1_001_cutadapt_chr17_57168614-57169531","4C-Seq-K_4_S4_all_R1_001_cutadapt_chr17_57168614-57169531"],
+	"4C-Seq-K_pvsmOHT_siCTCF_chr17_57168614-57169531":["4C-Seq-K_5_S5_all_R1_001_cutadapt_chr17_57168614-57169531","4C-Seq-K_6_S6_all_R1_001_cutadapt_chr17_57168614-57169531"],
+	"4C-Seq-K_pvsmOHT_siCTRL_chr1_89455867-89456712":["4C-Seq-K_1_S1_all_R1_001_cutadapt_chr1_89455867-89456712","4C-Seq-K_2_S2_all_R1_001_cutadapt_chr1_89455867-89456712"],
+	"4C-Seq-K_pvsmOHT_siSCC1_chr1_89455867-89456712":["4C-Seq-K_3_S3_all_R1_001_cutadapt_chr1_89455867-89456712","4C-Seq-K_4_S4_all_R1_001_cutadapt_chr1_89455867-89456712"],
+	"4C-Seq-K_pvsmOHT_siCTCF_chr1_89455867-89456712":["4C-Seq-K_5_S5_all_R1_001_cutadapt_chr1_89455867-89456712","4C-Seq-K_6_S6_all_R1_001_cutadapt_chr1_89455867-89456712"],
+	"4C-Seq-K_pvsmOHT_siCTRL_chr20_30946314-30947710":["4C-Seq-K_1_S1_all_R1_001_cutadapt_chr20_30946314-30947710","4C-Seq-K_2_S2_all_R1_001_cutadapt_chr20_30946314-30947710"],
+	"4C-Seq-K_pvsmOHT_siSCC1_chr20_30946314-30947710":["4C-Seq-K_3_S3_all_R1_001_cutadapt_chr20_30946314-30947710","4C-Seq-K_4_S4_all_R1_001_cutadapt_chr20_30946314-30947710"],
+	"4C-Seq-K_pvsmOHT_siCTCF_chr20_30946314-30947710":["4C-Seq-K_5_S5_all_R1_001_cutadapt_chr20_30946314-30947710","4C-Seq-K_6_S6_all_R1_001_cutadapt_chr20_30946314-30947710"],
+	"4C-Seq-K_pvsmOHT_siCTRL_chr21_33251469-33252587":["4C-Seq-K_1_S1_all_R1_001_cutadapt_chr21_33251469-33252587","4C-Seq-K_2_S2_all_R1_001_cutadapt_chr21_33251469-33252587"],
+	"4C-Seq-K_pvsmOHT_siSCC1_chr21_33251469-33252587":["4C-Seq-K_3_S3_all_R1_001_cutadapt_chr21_33251469-33252587","4C-Seq-K_4_S4_all_R1_001_cutadapt_chr21_33251469-33252587"],
+	"4C-Seq-K_pvsmOHT_siCTCF_chr21_33251469-33252587":["4C-Seq-K_5_S5_all_R1_001_cutadapt_chr21_33251469-33252587","4C-Seq-K_6_S6_all_R1_001_cutadapt_chr21_33251469-33252587"],
+
+	"4C-Seq-I_pvsmOHT_G1_chr17_45759770-45760603":["4C_seq_I_index1_S1_all_R1_001_cutadapt_chr17_45759770-45760603","4C_seq_I_index2_S2_all_R1_001_cutadapt_chr17_45759770-45760603"],
+	"4C-Seq-I_pvsmOHT_G2_chr17_45759770-45760603":["4C_seq_I_index3_S3_all_R1_001_cutadapt_chr17_45759770-45760603","4C_seq_I_index4_S4_all_R1_001_cutadapt_chr17_45759770-45760603"],
+	"4C-Seq-I_pvsmOHT_S_chr17_45759770-45760603":["4C_seq_I_index5_S5_all_R1_001_cutadapt_chr17_45759770-45760603","4C_seq_I_index6_S6_all_R1_001_cutadapt_chr17_45759770-45760603"],
+	"4C-Seq-I_pvsmOHT_G1_chr17_57168614-57169531":["4C_seq_I_index1_S1_all_R1_001_cutadapt_chr17_57168614-57169531","4C_seq_I_index2_S2_all_R1_001_cutadapt_chr17_57168614-57169531"],
+	"4C-Seq-I_pvsmOHT_G2_chr17_57168614-57169531":["4C_seq_I_index3_S3_all_R1_001_cutadapt_chr17_57168614-57169531","4C_seq_I_index4_S4_all_R1_001_cutadapt_chr17_57168614-57169531"],
+	"4C-Seq-I_pvsmOHT_S_chr17_57168614-57169531":["4C_seq_I_index5_S5_all_R1_001_cutadapt_chr17_57168614-57169531","4C_seq_I_index6_S6_all_R1_001_cutadapt_chr17_57168614-57169531"],
+	"4C-Seq-I_pvsmOHT_G1_chr1_89455867-89456712":["4C_seq_I_index1_S1_all_R1_001_cutadapt_chr1_89455867-89456712","4C_seq_I_index2_S2_all_R1_001_cutadapt_chr1_89455867-89456712"],
+	"4C-Seq-I_pvsmOHT_G2_chr1_89455867-89456712":["4C_seq_I_index3_S3_all_R1_001_cutadapt_chr1_89455867-89456712","4C_seq_I_index4_S4_all_R1_001_cutadapt_chr1_89455867-89456712"],
+	"4C-Seq-I_pvsmOHT_S_chr1_89455867-89456712":["4C_seq_I_index5_S5_all_R1_001_cutadapt_chr1_89455867-89456712","4C_seq_I_index6_S6_all_R1_001_cutadapt_chr1_89455867-89456712"],
+	"4C-Seq-I_pvsmOHT_G1_chr20_30946314-30947710":["4C_seq_I_index1_S1_all_R1_001_cutadapt_chr20_30946314-30947710","4C_seq_I_index2_S2_all_R1_001_cutadapt_chr20_30946314-30947710"],
+	"4C-Seq-I_pvsmOHT_G2_chr20_30946314-30947710":["4C_seq_I_index3_S3_all_R1_001_cutadapt_chr20_30946314-30947710","4C_seq_I_index4_S4_all_R1_001_cutadapt_chr20_30946314-30947710"],
+	"4C-Seq-I_pvsmOHT_S_chr20_30946314-30947710":["4C_seq_I_index5_S5_all_R1_001_cutadapt_chr20_30946314-30947710","4C_seq_I_index6_S6_all_R1_001_cutadapt_chr20_30946314-30947710"],
+	"4C-Seq-I_pvsmOHT_G1_chr21_33251469-33252587":["4C_seq_I_index1_S1_all_R1_001_cutadapt_chr21_33251469-33252587","4C_seq_I_index2_S2_all_R1_001_cutadapt_chr21_33251469-33252587"],
+	"4C-Seq-I_pvsmOHT_G2_chr21_33251469-33252587":["4C_seq_I_index3_S3_all_R1_001_cutadapt_chr21_33251469-33252587","4C_seq_I_index4_S4_all_R1_001_cutadapt_chr21_33251469-33252587"],
+	"4C-Seq-I_pvsmOHT_S_chr21_33251469-33252587":["4C_seq_I_index5_S5_all_R1_001_cutadapt_chr21_33251469-33252587","4C_seq_I_index6_S6_all_R1_001_cutadapt_chr21_33251469-33252587"]
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def getminus(wildcards):
+	return(IN+FILES[wildcards.file][0]+".sorted.bam")
+def getplus(wildcards):
+	return(IN+FILES[wildcards.file][1]+".sorted.bam")
+
+rule all:
+	input:
+		expand(OUT+"GAELLE_SMOOTH/{bin}/{file}_pvsmOHT_normalized.{bin}.{sw}.bw",file=FILES.keys(),bin = [100000,50000,10000,20000,5000,2000],sw = 200)
+
+
+
+rule bamCompare:
+	input:
+		mOHT = getminus,
+		pOHT = getplus
+	output:
+		OUT+"{file}_pvsmOHT_normalized.bw"
+	params:
+		binSize = 50
+	threads: 4
+	shell:
+		"bamCompare "
+		"--binSize {params.binSize} "
+		"--numberOfProcessors {threads} "
+		"--outFileName {output} "
+		"--operation log2 "
+		"-b2 {input.mOHT} "
+		"-b1 {input.pOHT} "
+
+
+rule favorite_gaelle_smooth:
+	input:
+		OUT+"{file}_pvsmOHT_normalized.bw"
+	output:
+		OUT+"GAELLE_SMOOTH/{bin}/{file}_pvsmOHT_normalized.{bin}.{sw}.bw"
+	params:
+		dir = os.getcwd(),
+		smooth_windows = "{bin}",
+		smooth_subwindows = "{sw}"
+	script:
+		"/mnt/NAS/DOSSIERS_PERSO/VINCENT/PIPELINES/R_SCRIPTS/PROFILES/favorite_gaelle_smooth.R"
