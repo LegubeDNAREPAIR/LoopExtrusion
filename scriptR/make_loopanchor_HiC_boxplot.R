@@ -1,17 +1,15 @@
 require(tidyverse)
 require(plyranges)
-bless80 = read_bed("/home/rochevin/Documents/PROJET_THESE/CLASSIF_HR_NHEJ/data/BED/BLESS_80best_JunFragPE_Rmdups_pm500bp.bed")
-
 #Refaire plot 4D avec manip A et B (et plus tard si CTRL)
 files <- c(
-    str_c(list.files("/home/rochevin/Documents/PROJET_INGE/APA/Gaelle/manipA/80best/loops_verysmall_DIvA_OHT_notdamaged_manipA_DIvA/10000",pattern="[A-Z0-9]v[A-Z0-9]",full.names = T),"/enhancement.txt") %>% setNames(str_c("manipA/notdamaged/","DIvA",str_extract(.,"/[A-Z0-9]+v[A-Z0-9]+"))),
-    str_c(list.files("/home/rochevin/Documents/PROJET_INGE/APA/Gaelle/manipA/80best/loops_verysmall_DIvA_OHT_notdamaged_manipA_OHT/10000",pattern="[A-Z0-9]v[A-Z0-9]",full.names = T),"/enhancement.txt") %>% setNames(str_c("manipA/notdamaged/","OHT",str_extract(.,"/[A-Z0-9]+v[A-Z0-9]+"))),
-    str_c(list.files("/home/rochevin/Documents/PROJET_INGE/APA/Gaelle/manipA/80best/loops_verysmall_DIvA_OHT_damaged_manipA_DIvA/10000",pattern="[A-Z0-9]v[A-Z0-9]",full.names = T),"/enhancement.txt") %>% setNames(str_c("manipA/damaged/","DIvA",str_extract(.,"/[A-Z0-9]+v[A-Z0-9]+"))),
-    str_c(list.files("/home/rochevin/Documents/PROJET_INGE/APA/Gaelle/manipA/80best/loops_verysmall_DIvA_OHT_damaged_manipA_OHT/10000",pattern="[A-Z0-9]v[A-Z0-9]",full.names = T),"/enhancement.txt") %>% setNames(str_c("manipA/damaged/","OHT",str_extract(.,"/[A-Z0-9]+v[A-Z0-9]+"))),
-    str_c(list.files("/home/rochevin/Documents/PROJET_INGE/APA/Gaelle/manipB/80best/loops_verysmall_DIvA_OHT_notdamaged_manipB_DIvA/10000",pattern="[A-Z0-9]v[A-Z0-9]",full.names = T),"/enhancement.txt") %>% setNames(str_c("manipB/notdamaged/","DIvA",str_extract(.,"/[A-Z0-9]+v[A-Z0-9]+"))),
-    str_c(list.files("/home/rochevin/Documents/PROJET_INGE/APA/Gaelle/manipB/80best/loops_verysmall_DIvA_OHT_notdamaged_manipB_OHT/10000",pattern="[A-Z0-9]v[A-Z0-9]",full.names = T),"/enhancement.txt") %>% setNames(str_c("manipB/notdamaged/","OHT",str_extract(.,"/[A-Z0-9]+v[A-Z0-9]+"))),
-    str_c(list.files("/home/rochevin/Documents/PROJET_INGE/APA/Gaelle/manipB/80best/loops_verysmall_DIvA_OHT_damaged_manipB_DIvA/10000",pattern="[A-Z0-9]v[A-Z0-9]",full.names = T),"/enhancement.txt") %>% setNames(str_c("manipB/damaged/","DIvA",str_extract(.,"/[A-Z0-9]+v[A-Z0-9]+"))),
-    str_c(list.files("/home/rochevin/Documents/PROJET_INGE/APA/Gaelle/manipB/80best/loops_verysmall_DIvA_OHT_damaged_manipB_OHT/10000",pattern="[A-Z0-9]v[A-Z0-9]",full.names = T),"/enhancement.txt") %>% setNames(str_c("manipB/damaged/","OHT",str_extract(.,"/[A-Z0-9]+v[A-Z0-9]+")))
+    str_c(list.files("/home/rochevin/Documents/PROJET_INGE/HiC_Coline/LoopExtrusion/data/APA/manipA/80best/loops_verysmall_DIvA_OHT_notdamaged_manipA_DIvA/10000",pattern="[A-Z0-9]v[A-Z0-9]",full.names = T),"/enhancement.txt") %>% setNames(str_c("manipA/notdamaged/","DIvA",str_extract(.,"/[A-Z0-9]+v[A-Z0-9]+"))),
+    str_c(list.files("/home/rochevin/Documents/PROJET_INGE/HiC_Coline/LoopExtrusion/data/APA/manipA/80best/loops_verysmall_DIvA_OHT_notdamaged_manipA_OHT/10000",pattern="[A-Z0-9]v[A-Z0-9]",full.names = T),"/enhancement.txt") %>% setNames(str_c("manipA/notdamaged/","OHT",str_extract(.,"/[A-Z0-9]+v[A-Z0-9]+"))),
+    str_c(list.files("/home/rochevin/Documents/PROJET_INGE/HiC_Coline/LoopExtrusion/data/APA/manipA/80best/loops_verysmall_DIvA_OHT_damaged_manipA_DIvA/10000",pattern="[A-Z0-9]v[A-Z0-9]",full.names = T),"/enhancement.txt") %>% setNames(str_c("manipA/damaged/","DIvA",str_extract(.,"/[A-Z0-9]+v[A-Z0-9]+"))),
+    str_c(list.files("/home/rochevin/Documents/PROJET_INGE/HiC_Coline/LoopExtrusion/data/APA/manipA/80best/loops_verysmall_DIvA_OHT_damaged_manipA_OHT/10000",pattern="[A-Z0-9]v[A-Z0-9]",full.names = T),"/enhancement.txt") %>% setNames(str_c("manipA/damaged/","OHT",str_extract(.,"/[A-Z0-9]+v[A-Z0-9]+"))),
+    str_c(list.files("/home/rochevin/Documents/PROJET_INGE/HiC_Coline/LoopExtrusion/data/APA/manipB/80best/loops_verysmall_DIvA_OHT_notdamaged_manipB_DIvA/10000",pattern="[A-Z0-9]v[A-Z0-9]",full.names = T),"/enhancement.txt") %>% setNames(str_c("manipB/notdamaged/","DIvA",str_extract(.,"/[A-Z0-9]+v[A-Z0-9]+"))),
+    str_c(list.files("/home/rochevin/Documents/PROJET_INGE/HiC_Coline/LoopExtrusion/data/APA/manipB/80best/loops_verysmall_DIvA_OHT_notdamaged_manipB_OHT/10000",pattern="[A-Z0-9]v[A-Z0-9]",full.names = T),"/enhancement.txt") %>% setNames(str_c("manipB/notdamaged/","OHT",str_extract(.,"/[A-Z0-9]+v[A-Z0-9]+"))),
+    str_c(list.files("/home/rochevin/Documents/PROJET_INGE/HiC_Coline/LoopExtrusion/data/APA/manipB/80best/loops_verysmall_DIvA_OHT_damaged_manipB_DIvA/10000",pattern="[A-Z0-9]v[A-Z0-9]",full.names = T),"/enhancement.txt") %>% setNames(str_c("manipB/damaged/","DIvA",str_extract(.,"/[A-Z0-9]+v[A-Z0-9]+"))),
+    str_c(list.files("/home/rochevin/Documents/PROJET_INGE/HiC_Coline/LoopExtrusion/data/APA/manipB/80best/loops_verysmall_DIvA_OHT_damaged_manipB_OHT/10000",pattern="[A-Z0-9]v[A-Z0-9]",full.names = T),"/enhancement.txt") %>% setNames(str_c("manipB/damaged/","OHT",str_extract(.,"/[A-Z0-9]+v[A-Z0-9]+")))
 ) %>%
     map(read_delim," ",col_names = F) %>%
     map(gather) %>%

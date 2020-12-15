@@ -11,7 +11,7 @@ bless80 <- "/home/rochevin/Documents/PROJET_THESE/CLASSIF_HR_NHEJ/data/BED/BLESS
 my_window <- 1000000
 mon_bed <- bless80 %>%
     anchor_center() %>% mutate(width = my_window*2)
-mes_loops_files <- list.files("/mnt/NAS1/DATA/HIGH_THROUGHPUT_GENOMICS_DIvA/Hi-C/HiC/loop/hiccups/Damaged_Undamaged",full.names = T)
+mes_loops_files <- list.files("/home/rochevin/Documents/PROJET_INGE/HiC_Coline/LoopExtrusion/data/loop/hiccups/Damaged_Undamaged",full.names = T)
 loop_data <- mes_loops_files %>% map(read_tsv,col_types = list(X1 = col_character(),X4 = col_character()),col_names = F)
 names(loop_data) <- mes_loops_files %>% map(basename) %>% map(str_remove,"\\.bed")
 

@@ -30,6 +30,10 @@ RAD21.narrow.gr <- RAD21.narrow %>% as_granges()
 RAD21.narrow.gr <- RAD21.narrow.gr %>% sort %>% filter(!str_detect(name,"Rad21OHT")) 
 
 
+mes_bw <- lapply(c("/mnt/NAS1/DATA/HIGH_THROUGHPUT_GENOMICS_DIvA/ChIP-Seq/Clouaire_HLNKYBGXC_SCC1//PROCESSED/mapping/EXPERIMENT/BIGWIG/HLNKYBGXC_Pool_ChIP-seq_legube_19s004478-1-1_Clouaire_lane1Rad21DIvA_sequence.exp_spikeinfactor.bw",
+                 "/mnt/NAS1/DATA/HIGH_THROUGHPUT_GENOMICS_DIvA/ChIP-Seq/Clouaire_HLNKYBGXC_SCC1//PROCESSED/mapping/EXPERIMENT/BIGWIG/HLNKYBGXC_Pool_ChIP-seq_legube_19s004478-1-1_Clouaire_lane1Rad21OHT_sequence.exp_spikeinfactor.bw"),import.bw,as="RleList")
+names(mes_bw) <- c("Rad21_DIvA","Rad21_OHT")
+
 res.boxplot.bg <- lapply(names(mes_bw),function(one.w){
     message(one.w)
     Get1val(one.w,mes_bw[[one.w]],RAD21.narrow.gr)

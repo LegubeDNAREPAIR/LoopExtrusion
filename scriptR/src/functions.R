@@ -195,3 +195,20 @@ ParaleliseViewprofile <- function(x,one.w,list.sites){
     d1 <- computeProfile(bed=subdom,wig = one.w,seqlens = seqlens,w = window,span=span) %>% colMeans()
     data.frame(Value=d1,Windows=seq(-window,window-span+1,span),Type=x)
 }
+#APA
+process_APA <- function(file){
+    seqpos <- seq(-10,10,by=1) %>% as.character()
+    my.dat <- file %>% read_csv(col_names = F) %>%
+        mutate_if(is.character,str_remove,"\\[|\\]") %>%
+        mutate_if(is.character,as.numeric) %>%
+        as.matrix()
+    
+    colnames(my.dat) <- seqpos
+    rownames(my.dat) <- rev( seqpos )
+    my.dat <- my.dat %>% reshape2::melt() %>%
+        mutate(file = file) %>%
+        mutate(DSB = str_extract(file,"174clived|80best")) %>%
+        mutate(Type = str_extract(file,"anchorLeftAsiSI|damaged|notdamaged")) %>%
+        mutate(Condition = str_extract(file,"manipA_OHT|manipA_DIvA|manipB_OHT|manipB_DIvA"))
+    return(my.dat)
+}

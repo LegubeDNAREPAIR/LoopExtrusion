@@ -1,21 +1,5 @@
 require(tidyverse)
-process_APA <- function(file){
-    seqpos <- seq(-10,10,by=1) %>% as.character()
-    my.dat <- file %>% read_csv(col_names = F) %>%
-        mutate_if(is.character,str_remove,"\\[|\\]") %>%
-        mutate_if(is.character,as.numeric) %>%
-        as.matrix()
-    
-    colnames(my.dat) <- seqpos
-    rownames(my.dat) <- rev( seqpos )
-    my.dat <- my.dat %>% reshape2::melt() %>%
-        mutate(file = file) %>%
-        mutate(DSB = str_extract(file,"174clived|80best")) %>%
-        mutate(Type = str_extract(file,"anchorLeftAsiSI|damaged|notdamaged")) %>%
-        mutate(Condition = str_extract(file,"manipA_OHT|manipA_DIvA|manipB_OHT|manipB_DIvA"))
-    return(my.dat)
-}
-
+source("src/functions.R")
 #Deux types de matrices : anchorLeft et Damaged/Undamaged
 ##ANCHORLEFT
 files <- c(
@@ -57,7 +41,7 @@ enrichment <- files %>% mutate(pixelLocation = case_when(
     spread(key = pixelLocation,value = meanValPixel) %>% 
     mutate(P2ULenrichment = `Central-Pixel`/`Top-Left`) %>%
     mutate(P2LLenrichment = `Central-Pixel`/`Lower-Left`) 
-
+enrichment
 ##TADS DAMAGED/UNDAMAGED
 my_combi <- expand.grid(c("OHT","DIvA"),c("damaged","notdamaged"),c("174clived","80best"),c("manipA","manipB"))
 files2 <- apply(my_combi,1,function(i){
@@ -108,48 +92,3 @@ for(j in 1:nrow(my_combi)){
     print(myp)
     dev.off()
 }
-
-#APA CTCF
-files <- list.files("APA_CTCF",full.names = T) %>% map(process_APA) %>% bind_rows()
-
-p1 <- files %>% mutate(value = ifelse(value > 150000,150000,value)) %>% ggplot(aes(Var2,Var1,fill=value)) + geom_tile() +
-    scale_fill_gradient2(low = "white",high = "#EA2027")  +
-    theme_classic(base_size = 24) +
-    facet_wrap(~Condition,scales="free") +
-    ylab("") + xlab("")
-
-pdf("loops_DIvA_OHT_ctcf_manipA_manipB.pdf",height=18,width=18)
-print(p1)
-dev.off()
-
-#APA siRNA
-#500kb
-files <- c(
-    "/home/rochevin/Documents/PROJET_INGE/APA/APA_loop_leftsideAsiSI/loops_DIvA_OHT_500kbfromAsiSI5_manipA_DIvA/10000/gw/APA.txt",
-    "/home/rochevin/Documents/PROJET_INGE/APA/APA_loop_leftsideAsiSI/loops_DIvA_OHT_500kbfromAsiSI5_manipA_OHT/10000/gw/APA.txt",
-    "/home/rochevin/Documents/PROJET_INGE/APA/APA_loop_leftsideAsiSI/loops_DIvA_OHT_500kbfromAsiSI5_manipB_DIvA/10000/gw/APA.txt",
-    "/home/rochevin/Documents/PROJET_INGE/APA/APA_loop_leftsideAsiSI/loops_DIvA_OHT_500kbfromAsiSI5_manipB_OHT/10000/gw/APA.txt",
-    "/home/rochevin/Documents/PROJET_INGE/APA/APA_loop_leftsideAsiSI/loops_DIvA_OHT_anchorLeftAsiSI_manipA_DIvA/10000/gw/APA.txt",
-    "/home/rochevin/Documents/PROJET_INGE/APA/APA_loop_leftsideAsiSI/loops_DIvA_OHT_anchorLeftAsiSI_manipA_OHT/10000/gw/APA.txt",
-    "/home/rochevin/Documents/PROJET_INGE/APA/APA_loop_leftsideAsiSI/loops_DIvA_OHT_anchorLeftAsiSI_manipB_DIvA/10000/gw/APA.txt",
-    "/home/rochevin/Documents/PROJET_INGE/APA/APA_loop_leftsideAsiSI/loops_DIvA_OHT_anchorLeftAsiSI_manipB_OHT/10000/gw/APA.txt"
-) %>% map(process_APA) %>% bind_rows() %>% 
-    mutate(Type = str_extract(file,"500kbfromAsiSI|anchorLeftAsiSI"))
-
-p1 <- files %>% filter(Type == "500kbfromAsiSI")%>% mutate(value = ifelse(value > 10000,10000,value))%>% ggplot(aes(Var2,Var1,fill=value)) + geom_tile() +
-    scale_fill_gradient2(low = "white",high = "#EA2027")  +
-    theme_classic(base_size = 24) +
-    facet_wrap(Type~Condition,scales="free") +
-    ylab("") + xlab("")
-
-p2 <- files %>% filter(Type == "anchorLeftAsiSI")%>% mutate(value = ifelse(value > 2000,2000,value))%>% ggplot(aes(Var2,Var1,fill=value)) + geom_tile() +
-    scale_fill_gradient2(low = "white",high = "#EA2027")  +
-    theme_classic(base_size = 24) +
-    facet_wrap(Type~Condition,scales="free") +
-    ylab("") + xlab("")
-
-
-
-pdf("loops_DIvA_OHT_APA_loop_leftsideAsiSI_500kbfromAsiSI_manipA_manipB.pdf",height=36,width=18)
-print(cowplot::plot_grid(p1,p2,ncol=1))
-dev.off()

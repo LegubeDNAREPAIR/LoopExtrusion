@@ -4,7 +4,7 @@ require(plyranges)
 require(rtracklayer)
 require(BSgenome.Hsapiens.UCSC.hg19.masked)
 seqlens <- seqlengths(BSgenome.Hsapiens.UCSC.hg19)
-
+source("src/functions.R")
 bless80 <- "/home/rochevin/Documents/PROJET_THESE/CLASSIF_HR_NHEJ/data/BED/BLESS_80best_JunFragPE_Rmdups_pm500bp.bed" %>% read_bed()
 
 
@@ -219,7 +219,9 @@ path4C.2 <- "/home/rochevin/Documents/PROJET_INGE/4CSeq_PROCESS_VINCENT/AFTER_EV
 
 wigs.4C <- c(list.files(path4C.1,pattern="_normalized.bw",full.names = T),list.files(path4C.2,pattern="_normalized.bw",full.names = T))
 
-to.plot.4C.compare <- lapply(c(50000,100000,500000,1000000),function(bin){
+
+
+to.plot.4C.compare <- lapply(c(1000000),function(bin){
     message(bin)
     lapply(wigs.4C,function(wig){
         one.w <- import.bw(wig,as="RleList")
@@ -246,6 +248,7 @@ subsubdf <- subsubdf %>% mutate(Group = ifelse(viewpoint == "chr17:45759770-4576
 p1 <- subsubdf %>%
     ggplot(aes(x=Condition,y=value,fill = Condition)) +  
     geom_boxplot() + 
+    geom_point()+
     facet_wrap(~Group,ncol=1) +
     theme_classic() + theme(legend.position = "none",axis.text.x = element_text(angle = 90)) + ggtitle(bin)
 print(p1)
@@ -259,8 +262,9 @@ subsubdf <- subsubdf %>% mutate(Group = ifelse(viewpoint == "chr17:45759770-4576
 p2 <- subsubdf %>% 
     ggplot(aes(x=Condition,y=value,fill = Condition)) +  
     geom_boxplot() + 
+    geom_point() +
     facet_wrap(~Group,ncol=1) +
-    theme_minimal() + theme(legend.position = "none",axis.text.x = element_text(angle = 90)) + ggtitle(bin)
+    theme_classic() + theme(legend.position = "none",axis.text.x = element_text(angle = 90)) + ggtitle(bin)
 print(p2)
 
 #MANIP A/C/D/Dbis mean barplot/boxplot
