@@ -1,0 +1,41 @@
+from snakemake.utils import R
+
+rule bless_r:
+	input:
+		bam=config["GENERAL"]["experiment_name"]+"/mapping/bam/sorted/{prefix}.sorted.bam",
+		bai=config["GENERAL"]["experiment_name"]+"/mapping/bam/sorted/{prefix}.sorted.bai"
+	output : 
+		config["GENERAL"]["experiment_name"]+"/mapping/BIGWIG/{prefix}_normalized.bw"
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/bless_r/bless_r.txt"
+	priority: 100
+	threads: 12
+	message : "##RUNNING : Rscript to process BLESS data"
+	run:
+		R("""
+			library(Rsamtools) ; # ScanBam
+			library(GenomicAlignments) ; # GAlignement
+			library(rtracklayer)
+			library("BSgenome.Hsapiens.UCSC.hg19")
+			seqlens = seqlengths( Hsapiens );
+			
+			BF <- BamFile("{input.bam}") ;
+			#Count reads
+			nbReads <- countBam(BF)$records
+			#Load BamFile with Paired-end information, without singletons and unmapped reads
+			GA <- readGAlignmentPairs(BF) ;
+			
+			#Make one fragment from paired-end
+			GR <- granges(GA)
+			#Take Only fragments with <= 800bp
+			GR <- GR[which((end(GR)-start(GR))<=800),]
+			#GR <- unique(GR)
+			
+			CovBam <- coverage(GR) ;
+			seqlens <- seqlengths( Hsapiens ) ;
+			seqlengths( CovBam ) <- seqlens[names(seqlengths( CovBam ) )] ;
+			nf <- as.numeric(1000000/nbReads)
+			CovBam <- CovBam * nf
+			export.bw( CovBam, "{output}" );
+
+		""")

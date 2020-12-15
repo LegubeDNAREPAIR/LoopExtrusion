@@ -1,0 +1,20 @@
+configfile: "config.json"
+
+
+GENOMES=[my_gen+config["GENOME"]["EXT"] for my_gen in config["GENOME"]["FILES"]]
+EXPERIMENT_GENOME = GENOMES[0]
+CTRL_GENOME = GENOMES[1]
+def getGenome(wildcards):
+	return(GENOMES[config["GENERAL"]["INPUT"][wildcards.prefix]["GENOME"]])
+RULES_DIR="RULES/"
+
+include:RULES_DIR+"full_mapping_using_ctrl_genome"
+
+
+rule all:
+	input:
+		expand(config["GENERAL"]["experiment_name"]+"/mapping/INPUT/BIGWIG/{prefix}.input_unnormalized.bw",prefix=config["GENERAL"]["INPUT"].keys()),
+		expand(config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/BIGWIG/{prefix}.{mytype}_{mynorm}.bw",prefix=config["GENERAL"]["EXPERIMENT"].keys(),mytype = ["ctrl","exp"],mynorm=["unnormalized","normalized"]),
+		expand(config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/BIGWIG/{prefix}.exp_spikeinfactor.bw",prefix=config["GENERAL"]["EXPERIMENT"].keys())
+
+

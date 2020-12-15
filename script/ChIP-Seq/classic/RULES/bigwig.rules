@@ -1,0 +1,32 @@
+from snakemake.utils import R
+rule make_bigwig:
+	input:
+		bam=config["GENERAL"]["experiment_name"]+"/mapping/bam/rmdups/{prefix}.rmdups.bam",
+		bai=config["GENERAL"]["experiment_name"]+"/mapping/bam/rmdups/{prefix}.rmdups.bai"
+	threads : config["GENERAL"]["threads"]
+	output:
+		protected(config["GENERAL"]["experiment_name"]+"/mapping/BIGWIG/{prefix}_normalized.bw")
+	params:
+		dir = os.getcwd()
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/make_bigwig/{prefix}.txt"
+	priority: 50
+	message : "##RUNNING : Rscript to make BIGWIG with {input}"
+	run:
+		R("""
+			setwd("{params.dir}") ;
+			library(Rsamtools) ; # ScanBam
+			library(GenomicAlignments) ; # GAlignement
+			library("BSgenome.Hsapiens.UCSC.hg19") ;
+			library( "rtracklayer" ) ; #Export bw
+			seqlens <- seqlengths( Hsapiens );
+			filename <- "{input.bam}";
+			BF <- BamFile(filename) ;
+			nbReads <- countBam(BF)$records ;
+			nf <- as.numeric(1000000/nbReads) ;
+			GA <- readGAlignments(BF) ;
+			CovBam <- coverage(GA) ;
+			nCovBam <- CovBam * nf ;
+			seqlengths( nCovBam ) <- seqlens[names(seqlengths( nCovBam ) )] ;
+			export.bw(nCovBam,"{output}") ;
+		""")

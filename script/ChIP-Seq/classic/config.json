@@ -1,0 +1,73 @@
+{
+	"GENERAL":{
+		"experiment_name":"PROCESSED",
+		"threads":12,
+		"sample_dir": "RAW",
+		"sample_ext" : ".gz",
+		"samples" : ["C8LVDACXX_H2AZac_DIVA_16s000910-1-1_Clouaire_lane116s000910_sequence.txt",
+"C8LVDACXX_H2AZac_OHT_DIVA_16s000911-1-1_Clouaire_lane116s000911_sequence.txt",
+"C8LVDACXX_H3_DIVA_16s000906-1-1_Clouaire_lane116s000906_sequence.txt",
+"C8LVDACXX_H3_OHT_DIVA_16s000907-1-1_Clouaire_lane116s000907_sequence.txt",
+"C8LVDACXX_H4K12ac_DIVA_16s000908-1-1_Clouaire_lane116s000908_sequence.txt",
+"C8LVDACXX_H4K12ac_OHT_DIVA_16s000909-1-1_Clouaire_lane116s000909_sequence.txt",
+"GAM.clean.fq",
+"H2Bub.clean.fq",
+"H2Bub_OHT.clean.fq",
+"H2VK7BGX5_GAM_G1_OHT_17s005727-1-1_Clouaire_lane117s005727_sequence.txt",
+"H2VK7BGX5_GAM_G2_OHT_17s005728-1-1_Clouaire_lane117s005728_sequence.txt",
+"H3K36me2.clean.fq",
+"H3K36me2_OHT.clean.fq",
+"H3K36me3.clean.fq",
+"H3K36me3_OHT.clean.fq",
+"H3K4me2_-OHT.clean.fq",
+"H3K4me2_OHT.clean.fq",
+"H3K56ac.clean.fq",
+"H3K56ac_OHT.clean.fq",
+"H3K79me2.clean.fq",
+"H3K79me2_OHT.clean.fq",
+"H3K9me2.fq",
+"H3K9me2_OHT.fq",
+"H4K16ac.clean.fq",
+"H4K16ac_OHT.clean.fq",
+"H4K20me1Mono.fq",
+"H4K20me1Mono_OHT.fq",
+"H4S1P.fq",
+"H4S1P_OHT.fq",
+"HFJNHBGX5_H4K20me2_DIVA_17s005866-1-1_Clouaire_lane117s005866_sequence.txt",
+"HFJNHBGX5_H4K20me2_OHT_17s005867-1-1_Clouaire_lane117s005867_sequence.txt",
+"HMNY7BGXX_H2AZ_DIVA_16s000418-1-1_Clouaire_lane116s000418_sequence.txt",
+"HMNY7BGXX_H2AZ_OHT_DIVA_16s000419-1-1_Clouaire_lane116s000419_sequence.txt",
+"HMNY7BGXX_H2BK120ac_DIVA_16s000420-1-1_Clouaire_lane116s000420_sequence.txt",
+"HMNY7BGXX_H2BK120ac_OHT_DI_16s000421-1-1_Clouaire_lane116s000421_sequence.txt",
+"HMNY7BGXX_H4K20me3_DIVA_16s000422-1-1_Clouaire_lane116s000422_sequence.txt",
+"HMNY7BGXX_H4K20me3_OHT_DI_16s000423-1-1_Clouaire_lane116s000423_sequence.txt",
+"HMNY7BGXX_MacroH2A_DIVA_16s000416-1-1_Clouaire_lane116s000416_sequence.txt",
+"HMNY7BGXX_MacroH2A_OHT_DIV_16s000417-1-1_Clouaire_lane116s000417_sequence.txt",
+"HN25TBGXX_H1_OHT_DIVA_16s000415-1-1_Clouaire_lane116s000415_sequence.txt",
+"HN25TBGXX_H1_minus_DIVA_16s000414-1-1_Clouaire_lane116s000414_sequence.txt",
+"HV5MYBGX5_53BP1_AS_OHT_18s000865-1-1_Clouaire_lane118s000865_sequence.txt",
+"HVL7VBGX5_Lig4_2_DIVA_18s000868-1-1_Clouaire_lane118s000868_sequence.txt",
+"HVL7VBGX5_Lig4_2_OHT_18s000869-1-1_Clouaire_lane118s000869_sequence.txt",
+"HVW7VBGXX_53BP1_OHT_DIVA_16s000426-1-1_Clouaire_lane116s000426_sequence.txt",
+"HWNTLBGX3_53BP1_G1_OHT_17s005725-1-1_Clouaire_lane117s005725_sequence.txt",
+"HWNTLBGX3_53BP1_G2_OHT_17s005726-1-1_Clouaire_lane117s005726_sequence.txt",
+"HWNTLBGX3_H3K9me3_DIVA_17s005723-1-1_Clouaire_lane117s005723_sequence.txt",
+"HWNTLBGX3_H3K9me3_OHT_DIVA_17s005724-1-1_Clouaire_lane117s005724_sequence.txt",
+"NG-8008_FK2_OHT_lib76331_3801_6_1.fastq",
+"NG-8008_FK2_minus_lib76330_3801_7_1.fastq"]
+
+
+	},
+	"GENOME":{
+		"gen_dir": "female.hg19",
+		"gen_ext": ".fa"
+	},
+	"BWA":{
+		"custom":""
+	},
+	"SAMTOOLS":{
+		"quality":25,
+		"custom":""
+	}
+}
+

@@ -1,0 +1,31 @@
+rule fastqc_raw:
+	input:
+		fastq=config["GENERAL"]["sample_dir"]+"/{prefix}"+config["GENERAL"]["sample_ext"]
+	output:
+		config["GENERAL"]["experiment_name"]+"/QC/RAW/{prefix}_fastqc.html"
+	params:
+		dir=config["GENERAL"]["experiment_name"]+"/QC/RAW/",
+		before=config["GENERAL"]["experiment_name"]+"/QC/RAW/{prefix}_fastqc.zip",
+		after=config["GENERAL"]["experiment_name"]+"/QC/RAW/{prefix}_raw_fastqc.zip"
+	threads: config["GENERAL"]["threads"]
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/fastqc_raw/{prefix}.txt"
+	priority: 100
+	message : "##RUNNING : fastqc for {input.fastq}"
+	shell: 
+		"fastqc -q -t {threads} --outdir {params.dir} {input.fastq}"
+
+
+rule fastqc_bam:
+	input:
+		bam=config["GENERAL"]["experiment_name"]+"/mapping/bam/rmdups/{prefix}.rmdups.bam"
+	output:
+		config["GENERAL"]["experiment_name"]+"/QC/bam/{prefix}.rmdups_fastqc.html"
+	params:
+		dir=config["GENERAL"]["experiment_name"]+"/QC/bam/"
+	threads: config["GENERAL"]["threads"]
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/fastqc_bam/{prefix}.txt"
+	priority: 10
+	message : "##RUNNING : fastqc for {input.bam}"
+	shell: "fastqc -q -t {threads} --outdir {params.dir} {input.bam}"

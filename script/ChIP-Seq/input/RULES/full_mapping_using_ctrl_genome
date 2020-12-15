@@ -1,0 +1,329 @@
+#MAP INPUT FASTQ
+rule bwa_aln_input:
+	input:
+		fastq=config["GENERAL"]["sample_dir"]+"/{prefix}"+config["GENERAL"]["sample_ext"],
+		genome=getGenome
+	output:
+		temp(config["GENERAL"]["experiment_name"]+"/mapping/INPUT/bam/{prefix}.input.sai")
+	params:
+		custom=config["BWA"]["custom"]
+	threads: config["GENERAL"]["threads"]
+	priority: 50
+	message: "##RUNNING : bwa aln for {input.fastq}"
+	shell:
+		"bwa aln {params.custom} "
+		"-t {threads} "
+		"-f {output} "
+		"{input.genome} {input.fastq}"
+
+rule bwa_samse_input:
+	input:
+		fastq=config["GENERAL"]["sample_dir"]+"/{prefix}"+config["GENERAL"]["sample_ext"],
+		genome=getGenome,
+		sai=config["GENERAL"]["experiment_name"]+"/mapping/INPUT/bam/{prefix}.input.sai"
+	output:
+		temp(config["GENERAL"]["experiment_name"]+"/mapping/INPUT/bam/{prefix}.input.sam")
+	priority: 50
+	message: "##RUNNING : bwa samse {input.fastq}"
+	shell:
+		"bwa samse "
+		"-f {output} "
+		"{input.genome} {input.sai} {input.fastq}"
+
+
+rule sam_to_bam_input:
+	input:
+		sam=config["GENERAL"]["experiment_name"]+"/mapping/INPUT/bam/{prefix}.input.sam",
+		genome=getGenome
+	output:
+		config["GENERAL"]["experiment_name"]+"/mapping/INPUT/bam/raw/{prefix}.input.bam"
+	params:
+		quality=config["SAMTOOLS"]["quality"],
+		custom=config["SAMTOOLS"]["custom"]
+	priority: 50
+	threads: config["GENERAL"]["threads"]
+	message: "##RUNNING : samtools view for {input.sam}"
+	shell:
+		"samtools view "
+		"{params.custom} -@ {threads} "
+		"-b -S "
+		"-q {params.quality} "
+		"-t {input.genome}.fai "
+		"-o {output} "
+		"{input.sam}"
+
+
+#MAP EXPERIMENT
+rule bwa_aln:
+	input:
+		fastq=config["GENERAL"]["sample_dir"]+"/{prefix}"+config["GENERAL"]["sample_ext"],
+		genome=CTRL_GENOME
+	output:
+		temp(config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/bam/{prefix}.ctrl.sai")
+	params:
+		custom=config["BWA"]["custom"]
+	threads: config["GENERAL"]["threads"]
+	priority: 50
+	message: "##RUNNING : bwa aln for {input.fastq}"
+	shell:
+		"bwa aln {params.custom} "
+		"-t {threads} "
+		"-f {output} "
+		"{input.genome} {input.fastq}"
+
+rule bwa_samse:
+	input:
+		fastq=config["GENERAL"]["sample_dir"]+"/{prefix}"+config["GENERAL"]["sample_ext"],
+		genome=CTRL_GENOME,
+		sai=config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/bam/{prefix}.ctrl.sai"
+	output:
+		temp(config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/bam/{prefix}.ctrl.sam")
+	priority: 50
+	message: "##RUNNING : bwa samse {input.fastq}"
+	shell:
+		"bwa samse "
+		"-f {output} "
+		"{input.genome} {input.sai} {input.fastq}"
+
+
+
+#SamtoBam mapped
+rule mapped_bam:
+	input:
+		sam=config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/bam/{prefix}.ctrl.sam",
+		genome=EXPERIMENT_GENOME
+	output:
+		config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/bam/raw/{prefix}.ctrl.bam"
+	params:
+		quality=config["SAMTOOLS"]["quality"],
+		custom=config["SAMTOOLS"]["custom"]
+	priority: 50
+	threads: config["GENERAL"]["threads"]
+	message: "##RUNNING : samtools view for {input.sam}"
+	shell:
+		"samtools view "
+		"{params.custom} -@ {threads} "
+		"-b -S -F4 "
+		"-q {params.quality} "
+		"-t {input.genome}.fai "
+		"-o {output} "
+		"{input.sam}"
+
+#SamtoBam unmapped
+rule unmapped_bam:
+	input:
+		sam=config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/bam/{prefix}.ctrl.sam"
+	output:
+		config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/bam/raw/{prefix}.unmapped.bam"
+	params:
+		quality=config["SAMTOOLS"]["quality"],
+		custom=config["SAMTOOLS"]["custom"]
+	priority: 50
+	threads: config["GENERAL"]["threads"]
+	message: "##RUNNING : samtools view for {input.sam}"
+	shell:
+		"samtools view "
+		"{params.custom} -@ {threads} "
+		"-b -S "
+		"-f4 "
+		"-o {output} "
+		"{input.sam}"
+
+
+
+#Remap unmapped 
+
+#Convert into fastq again, then map to experiment reference genome
+rule bam2fastq:
+	input:
+		config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/bam/raw/{prefix}.unmapped.bam"
+	output:
+		config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/fastq/{prefix}.exp.fastq"
+	shell:
+		"bedtools bamtofastq -i {input} -fq {output}"
+
+
+rule bwa_aln_exp:
+	input:
+		fastq=config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/fastq/{prefix}.exp.fastq",
+		genome=EXPERIMENT_GENOME
+	output:
+		temp(config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/bam/{prefix}.exp.sai")
+	params:
+		custom=config["BWA"]["custom"]
+	threads: config["GENERAL"]["threads"]
+	priority: 50
+	message: "##RUNNING : bwa aln for {input.fastq}"
+	shell:
+		"bwa aln {params.custom} "
+		"-t {threads} "
+		"-f {output} "
+		"{input.genome} {input.fastq}"
+
+rule bwa_samse_exp:
+	input:
+		fastq=config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/fastq/{prefix}.exp.fastq",
+		genome=EXPERIMENT_GENOME,
+		sai=config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/bam/{prefix}.exp.sai"
+	output:
+		temp(config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/bam/{prefix}.exp.sam")
+	priority: 50
+	message: "##RUNNING : bwa samse {input.fastq}"
+	shell:
+		"bwa samse "
+		"-f {output} "
+		"{input.genome} {input.sai} {input.fastq}"
+
+
+
+rule mapped_bam_exp:
+	input:
+		sam=config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/bam/{prefix}.exp.sam",
+		genome=EXPERIMENT_GENOME
+	output:
+		config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/bam/raw/{prefix}.exp.bam"
+	params:
+		quality=config["SAMTOOLS"]["quality"],
+		custom=config["SAMTOOLS"]["custom"]
+	priority: 50
+	threads: config["GENERAL"]["threads"]
+	message: "##RUNNING : samtools view for {input.sam}"
+	shell:
+		"samtools view "
+		"{params.custom} -@ {threads} "
+		"-b -S -F4 "
+		"-q {params.quality} "
+		"-t {input.genome}.fai "
+		"-o {output} "
+		"{input.sam}"
+
+
+#RULE TO GENERATE A NORMALIZED BIGWIG FOR EXPERIMENT USING :
+# Input_ctrl : The number of reads in the input file from the control genome (in our case mouse)
+# Input_exp :  The number of reads in the input file from the experiment genome (in our case human)
+# nb_reads_exp : The number of reads in our experiment mapped in our experiment genome (exp.bam)
+# nb_reads_ctrl : The number of reads in our experiment who's are aligned in the control genome (ctrl.bam)
+def getCtrlInput(wildcards):
+	dir_input = config["GENERAL"]["experiment_name"]+"/mapping/INPUT/bam/rmdups/"
+	return(dir_input+config["GENERAL"]["EXPERIMENT"][wildcards.prefix]["CTRL"]+".input.rmdups.bam")
+def getExperimentInput(wildcards):
+	dir_input = config["GENERAL"]["experiment_name"]+"/mapping/INPUT/bam/rmdups/"
+	return(dir_input+config["GENERAL"]["EXPERIMENT"][wildcards.prefix]["EXPERIMENT"]+".input.rmdups.bam")
+
+
+
+import pysam
+
+rule bamCoverageScaleFactor:
+	input:
+		bamexp=config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/bam/rmdups/{prefix}.exp.rmdups.bam",
+		bamctrl=config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/bam/rmdups/{prefix}.ctrl.rmdups.bam",
+		baiexp=config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/bam/rmdups/{prefix}.exp.rmdups.bai",
+		baictrl=config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/bam/rmdups/{prefix}.ctrl.rmdups.bai",
+		input_ctrl = getCtrlInput,
+		input_exp = getExperimentInput,
+	threads : config["GENERAL"]["threads"]
+	output:
+		protected(config["GENERAL"]["experiment_name"]+"/mapping/EXPERIMENT/BIGWIG/{prefix}.exp_spikeinfactor.bw")
+	params:
+		binsize=1
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/bamCoverageScaleFactor/{prefix}.txt"
+	priority: 50
+	message : "##RUNNING : BamCoverage to make BIGWIG with {input}"
+	run:
+		Input_ctrl = pysam.AlignmentFile(input.input_ctrl).mapped
+		Input_exp = pysam.AlignmentFile(input.input_exp).mapped
+		nb_reads_exp = pysam.AlignmentFile(input.bamexp).mapped
+		nb_reads_ctrl = pysam.AlignmentFile(input.bamctrl).mapped
+		scaling_factor = (int(Input_ctrl)*int(nb_reads_exp))/(int(Input_exp)*int(nb_reads_ctrl))
+		print("Input_ctrl: %i" % Input_ctrl)
+		print("Input_exp: %i" % Input_exp)
+		print("nb_reads_exp: %i" % nb_reads_exp)
+		print("nb_reads_ctrl: %i" % nb_reads_ctrl)
+		print("Occupancy ratio computed: %f" % scaling_factor)
+		shell("bamCoverage -b {input.bamexp} -o {output} -of bigwig --scaleFactor "+str(scaling_factor)+" -bs {params.binsize} -p {threads}")
+
+
+#GENERAL RULES
+rule samtools_sort:
+	input:
+		bam=config["GENERAL"]["experiment_name"]+"/mapping/{type}/bam/raw/{prefix}.{ext}.bam"
+	output:
+		config["GENERAL"]["experiment_name"]+"/mapping/{type}/bam/sorted/{prefix}.{ext}.sorted.bam"
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/samtools_sort/{prefix}_{type}_{ext}.txt"
+	priority: 50
+	threads: config["GENERAL"]["threads"]
+	message: "##RUNNING : samtools sort {input.bam}"
+	shell:
+		"samtools sort -@ {threads} "
+		"-o {output} "
+		"{input.bam}"
+
+rule samtools_rmpdups:
+	input:
+		bam=config["GENERAL"]["experiment_name"]+"/mapping/{type}/bam/sorted/{prefix}.{ext}.sorted.bam"
+	output:
+		config["GENERAL"]["experiment_name"]+"/mapping/{type}/bam/rmdups/{prefix}.{ext}.rmdups.bam"
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/samtools_rmdups/{prefix}_{type}_{ext}.txt"
+	priority: 50
+	message: "##RUNNING : samtools rmdup {input.bam}"
+	shell:
+		"samtools rmdup "
+		"-s {input.bam} "
+		"{output}"
+
+rule samtools_index:
+	input:
+		bam=config["GENERAL"]["experiment_name"]+"/mapping/{type}/bam/rmdups/{prefix}.{ext}.rmdups.bam"
+	output:
+		config["GENERAL"]["experiment_name"]+"/mapping/{type}/bam/rmdups/{prefix}.{ext}.rmdups.bai"
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/samtools_index/{prefix}_{type}_{ext}.txt"
+	priority: 50
+	threads: config["GENERAL"]["threads"]
+	message: "##RUNNING : samtools index {input}"
+	shell:
+		"samtools index -@ {threads} {input} {output}"
+
+rule bamCoveragenoNorm:
+	input:
+		bam=config["GENERAL"]["experiment_name"]+"/mapping/{type}/bam/rmdups/{prefix}.{ext}.rmdups.bam",
+		bai=config["GENERAL"]["experiment_name"]+"/mapping/{type}/bam/rmdups/{prefix}.{ext}.rmdups.bai"
+	threads : config["GENERAL"]["threads"]
+	output:
+		protected(config["GENERAL"]["experiment_name"]+"/mapping/{type}/BIGWIG/{prefix}.{ext}_unnormalized.bw")
+	params:
+		binsize=1
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/bamCoverage/{prefix}_{type}_{ext}.txt"
+	priority: 50
+	message : "##RUNNING : Rscript to make BIGWIG with {input}"
+	shell:
+		"bamCoverage -b {input.bam} -o {output} -of bigwig -bs {params.binsize} -p {threads}"
+
+
+
+rule bamCoverageNorm:
+	input:
+		bam=config["GENERAL"]["experiment_name"]+"/mapping/{type}/bam/rmdups/{prefix}.{ext}.rmdups.bam",
+		bai=config["GENERAL"]["experiment_name"]+"/mapping/{type}/bam/rmdups/{prefix}.{ext}.rmdups.bai"
+	threads : config["GENERAL"]["threads"]
+	output:
+		protected(config["GENERAL"]["experiment_name"]+"/mapping/{type}/BIGWIG/{prefix}.{ext}_normalized.bw")
+	params:
+		normalization="CPM",
+		binsize=1
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/bamCoverage/{prefix}_{type}_{ext}.txt"
+	priority: 50
+	message : "##RUNNING : Rscript to make BIGWIG with {input}"
+	shell:
+		"bamCoverage -b {input.bam} -o {output} -of bigwig -bs {params.binsize} -p {threads} --exactScaling --normalizeUsing {params.normalization} "
+
+
+
+
+

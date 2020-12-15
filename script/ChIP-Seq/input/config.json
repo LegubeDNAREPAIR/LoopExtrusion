@@ -1,0 +1,50 @@
+{
+	"GENERAL":{
+		"experiment_name":"PROCESSED",
+		"threads":12,
+		"sample_dir": "RAW",
+		"sample_ext" : ".txt.gz",
+		"INPUT":{
+			"HLNKYBGXC_Pool_ChIP-seq_legube_19s004478-1-1_Clouaire_lane1InputDIvA_sequence": {
+				"GENOME":0
+			},  
+			"HLNKYBGXC_Pool_ChIP-seq_legube_19s004478-1-1_Clouaire_lane1InputES_sequence": {
+				"GENOME":1
+			},    
+			
+			"HLNKYBGXC_Pool_ChIP-seq_legube_19s004478-1-1_Clouaire_lane1InputOHT_sequence": {
+				"GENOME":0
+			}
+		},
+		"EXPERIMENT":{
+			"HLNKYBGXC_Pool_ChIP-seq_legube_19s004478-1-1_Clouaire_lane1Rad21OHT_sequence": {
+				"GENOME":0,
+				"CTRL":"HLNKYBGXC_Pool_ChIP-seq_legube_19s004478-1-1_Clouaire_lane1InputES_sequence",
+				"EXPERIMENT":"HLNKYBGXC_Pool_ChIP-seq_legube_19s004478-1-1_Clouaire_lane1InputOHT_sequence"
+			},
+			"HLNKYBGXC_Pool_ChIP-seq_legube_19s004478-1-1_Clouaire_lane1Rad21DIvA_sequence": {
+				"GENOME":0,
+				"CTRL":"HLNKYBGXC_Pool_ChIP-seq_legube_19s004478-1-1_Clouaire_lane1InputES_sequence",
+				"EXPERIMENT":"HLNKYBGXC_Pool_ChIP-seq_legube_19s004478-1-1_Clouaire_lane1InputDIvA_sequence"
+			}
+		}
+	},
+	"GENOME":{
+		"FILES":[
+			"/bioinfo_legube/NAS/DATA/DATA_FROM_OTHER_LABS_and_DATABASES/GENOMES/female.hg19/female.hg19",
+			"/bioinfo_legube/VINCENT/GENOMES/mm10/mm10"
+		],
+		"EXT":".fa"
+	},
+	"FASTQC":{
+		"qc_template":"/bioinfo_legube/NAS/DOSSIERS_PERSO/VINCENT/PIPELINES/R_SCRIPTS/TEMPLATES/multi-qc-report-flex.Rmd",
+		"multiqc_conf":"Clouaire_H3CH7BGXC.yaml"
+	},
+	"BWA":{
+		"custom":""
+	},
+	"SAMTOOLS":{
+		"quality":25,
+		"custom":""
+	}
+}

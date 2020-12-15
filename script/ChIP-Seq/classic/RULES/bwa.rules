@@ -1,0 +1,45 @@
+rule bwa_index:
+	input:
+		genome=config["GENOME"]["gen_dir"]+config["GENOME"]["gen_ext"]
+	output:
+		config["GENOME"]["gen_dir"]+config["GENOME"]["gen_ext"]+".bwt"
+	priority: 50
+	message: "##RUNNING : bwa index {input.genome}"
+	shell:
+		"bwa index {input.genome}"
+
+rule bwa_aln:
+	input:
+		fastq=config["GENERAL"]["sample_dir"]+"/{prefix}"+config["GENERAL"]["sample_ext"],
+		index=config["GENOME"]["gen_dir"]+config["GENOME"]["gen_ext"]+".bwt",
+		genome=config["GENOME"]["gen_dir"]+config["GENOME"]["gen_ext"]
+	output:
+		config["GENERAL"]["experiment_name"]+"/mapping/sam/{prefix}.sai"
+	params:
+		custom=config["BWA"]["custom"]
+	threads: config["GENERAL"]["threads"]
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/bwa_aln/{prefix}.txt"
+	priority: 50
+	message: "##RUNNING : bwa aln for {input.fastq}"
+	shell:
+		"bwa aln {params.custom} "
+		"-t {threads} "
+		"-f {output} "
+		"{input.genome} {input.fastq}"
+
+rule bwa_samse:
+	input:
+		fastq=config["GENERAL"]["sample_dir"]+"/{prefix}"+config["GENERAL"]["sample_ext"],
+		genome=config["GENOME"]["gen_dir"]+config["GENOME"]["gen_ext"],
+		sai=config["GENERAL"]["experiment_name"]+"/mapping/sam/{prefix}.sai"
+	output:
+		config["GENERAL"]["experiment_name"]+"/mapping/sam/{prefix}.sam"
+	priority: 50
+	message: "##RUNNING : bwa samse {input.fastq}"
+	shell:
+		"bwa samse "
+		"-f {output} "
+		"{input.genome} {input.sai} {input.fastq}"
+
+

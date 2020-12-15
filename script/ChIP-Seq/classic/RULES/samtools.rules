@@ -1,0 +1,128 @@
+rule samtools_faidx:
+	input:
+		genome=config["GENOME"]["gen_dir"]+config["GENOME"]["gen_ext"]
+	output:
+		config["GENOME"]["gen_dir"]+config["GENOME"]["gen_ext"]+".fai"
+	priority: 50
+	message: "##RUNNING : samtools faidx {input.genome}"
+	shell:
+		"samtools faidx {input.genome}"
+
+rule sam_to_bam:
+	input:
+		sam=config["GENERAL"]["experiment_name"]+"/mapping/sam/{prefix}.sam",
+		genome=config["GENOME"]["gen_dir"]+config["GENOME"]["gen_ext"]+".fai"
+	output:
+		config["GENERAL"]["experiment_name"]+"/mapping/bam/raw/{prefix}.bam"
+	params:
+		quality=config["SAMTOOLS"]["quality"],
+		custom=config["SAMTOOLS"]["custom"]
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/sam_to_bam/{prefix}.txt"
+	priority: 50
+	threads: config["GENERAL"]["threads"]
+	message: "##RUNNING : samtools view for {input.sam}"
+	shell:
+		"samtools view "
+		"{params.custom} -@ {threads} "
+		"-b -S "
+		"-q {params.quality} "
+		"-t {input.genome} "
+		"-o {output} "
+		"{input.sam}"
+
+rule samtools_sort:
+	input:
+		bam=config["GENERAL"]["experiment_name"]+"/mapping/bam/raw/{prefix}.bam"
+	output:
+		config["GENERAL"]["experiment_name"]+"/mapping/bam/sorted/{prefix}.sorted.bam"
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/samtools_sort/{prefix}.txt"
+	priority: 50
+	threads: config["GENERAL"]["threads"]
+	message: "##RUNNING : samtools sort {input.bam}"
+	shell:
+		"samtools sort -@ {threads} "
+		"-o {output} "
+		"{input.bam}"
+
+rule samtools_rmpdups:
+	input:
+		bam=config["GENERAL"]["experiment_name"]+"/mapping/bam/sorted/{prefix}.sorted.bam"
+	output:
+		config["GENERAL"]["experiment_name"]+"/mapping/bam/rmdups/{prefix}.rmdups.bam"
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/samtools_rmdups/{prefix}.txt"
+	priority: 50
+	message: "##RUNNING : samtools rmdup {input.bam}"
+	shell:
+		"samtools rmdup "
+		"-s {input.bam} "
+		"{output}"
+
+rule samtools_index:
+	input:
+		bam=config["GENERAL"]["experiment_name"]+"/mapping/bam/rmdups/{prefix}.rmdups.bam"
+	output:
+		config["GENERAL"]["experiment_name"]+"/mapping/bam/rmdups/{prefix}.rmdups.bai"
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/samtools_index/{prefix}.txt"
+	priority: 50
+	threads: config["GENERAL"]["threads"]
+	message: "##RUNNING : samtools index {input}"
+	shell:
+		"samtools index -@ {threads} {input} {output}"
+
+rule samtools_index_sorted:
+	input:
+		bam=config["GENERAL"]["experiment_name"]+"/mapping/bam/sorted/{prefix}.sorted.bam"
+	output:
+		config["GENERAL"]["experiment_name"]+"/mapping/bam/sorted/{prefix}.sorted.bai"
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/samtools_index_sorted/{prefix}.txt"
+	priority: 50
+	threads: config["GENERAL"]["threads"]
+	message: "##RUNNING : samtools index {input}"
+	shell:
+		"samtools index -@ {threads} {input} {output}"
+
+
+rule samtools_stats:
+	input:
+		bam=config["GENERAL"]["experiment_name"]+"/mapping/bam/rmdups/{prefix}.rmdups.bam",
+		bai=config["GENERAL"]["experiment_name"]+"/mapping/bam/rmdups/{prefix}.rmdups.bai"
+	output:
+		config["GENERAL"]["experiment_name"]+"/QC/STATS/stats/{prefix}.rmdups.stats"
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/samtools_stats/{prefix}.txt"
+	priority: 50
+	message: "##RUNNING : samtools stats {input}"
+	shell:
+		"samtools stats {input.bam} > {output}"
+
+rule samtools_idxstats:
+	input:
+		bam=config["GENERAL"]["experiment_name"]+"/mapping/bam/rmdups/{prefix}.rmdups.bam",
+		bai=config["GENERAL"]["experiment_name"]+"/mapping/bam/rmdups/{prefix}.rmdups.bai"
+	output:
+		config["GENERAL"]["experiment_name"]+"/QC/STATS/idxstats/{prefix}.rmdups.idxstats"
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/samtools_idxstats/{prefix}.txt"
+	priority: 50
+	message: "##RUNNING : samtools idxstats {input}"
+	shell:
+		"samtools idxstats {input.bam} > {output}"
+
+rule samtools_flagstat:
+	input:
+		bam=config["GENERAL"]["experiment_name"]+"/mapping/bam/rmdups/{prefix}.rmdups.bam",
+		bai=config["GENERAL"]["experiment_name"]+"/mapping/bam/rmdups/{prefix}.rmdups.bai"
+	output:
+		config["GENERAL"]["experiment_name"]+"/QC/STATS/flagstat/{prefix}.rmdups.flagstat"
+	benchmark :
+		config["GENERAL"]["experiment_name"]+"/benchmarks/samtools_flagstat/{prefix}.txt"
+	priority: 50
+	message: "##RUNNING : samtools flagstat {input}"
+	shell:
+		"samtools flagstat {input.bam} > {output}"
+

@@ -1,0 +1,13 @@
+configfile: "config.json"
+
+RULES_DIR="RULES/"
+
+include:RULES_DIR+"fastqc.rules"
+include:RULES_DIR+"bwa.rules"
+include:RULES_DIR+"samtools.rules"
+include:RULES_DIR+"bigwig.rules"
+
+
+rule all:
+	input:
+		expand(config["GENERAL"]["experiment_name"]+"/mapping/BIGWIG/{sample}_normalized.bw",sample=config["GENERAL"]["samples"])
