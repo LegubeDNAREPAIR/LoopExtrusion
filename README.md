@@ -47,19 +47,18 @@ the scripts were written with `R`, and need some packages
   - `library(dplyr)`.
   - `library(Homo.sapiens)`.
 
-| Scripts                                              | Description                                                                                      | Figures                             |
-| :--------------------------------------------------- | :----------------------------------------------------------------------------------------------- | :---------------------------------- |
-| analysis\_Virtual4C\_DSB.R                           |                                                                                                  |                                     |
-| insulation\_score\_profil.R                          |                                                                                                  |                                     |
-| make\_APA\_heatmap.R                                 | Get the APA from juicer tools and produce graphics with ggplot2.                                 | Figs 2c; ext2f; ext2g; ext6f        |
-| make\_gamma\_boxplot\_cinetique.R                    | Compute the speed for gammaH2AX progression over TAds and show distance distribution over time.  | Figs ext5b                          |
-| make\_4Cseq\_barplot.R                               | Compute differential 4C-seq signal (log2 +DSB/-DSB) on 1mb around DSBs viewpoints.               | Figs 4c; ext3d; ext3h               |
-| make\_chipseq\_barplot\_TADs.R                       | Compute ChIP-seq quantification within the damaged TAD and neighboring TADs.                     | Figs ext1f                          |
-| make\_chipseq\_boxplot\_cohesine.R                   | Compute signal over cohesine peaks.                                                              | Figs ext6b                          |
-| make\_chipseq\_boxplot\_profile.R                    | Compute signal over DSBs and produce some profiles/boxplots.                                     | Figs ext1d; ext1k; 2e; ext2b; ext7b |
-| make\_HiC\_heatmap.R                                 | Compute average heatmaps from HiC dumped matrixes (juicer) and HiTC.                             | Figs 2b; 2d; 2g; ext2d; ext2e       |
-| make\_HiTC.R                                         | Produce HiTC format from dumped matrix to be loaded in R.                                        |                                     |
-| make\_loopanchor\_chipseq\_boxplot\_over\_distance.R | Compute the quantification of SCC1 recruitment on loop anchors at different distances from DSBs. | Figs ext6d                          |
-| make\_loopanchor\_chipseq\_boxplot.R                 | Compute the ChIP-seq signal on loop anchors.                                                     | Figs ext7c                          |
-| make\_loopanchor\_HiC\_boxplot.R                     | Compute the differential loop strength in undamaged or damaged TADs                              | Figs ext6g                          |
-| plot\_gH2AX\_TADborder.R                             | Compute average gammaH2AX profile centered to the closest TAD border to the DSBs.                | Figs 1e                             |
+| Scripts                                              | Description                                                                                                         | Figures                             |
+| :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------ | :---------------------------------- |
+| plot\_4C\_withotherdata.R                            | Compute the HiC matrix / ChIP-seq gammaH2AX / 4C-seq / insulation score / TAD border / CTCF peaks for given regions | Figs 1d; ext1e                      |
+| make\_APA\_heatmap.R                                 | Get the APA from juicer tools and produce graphics with ggplot2.                                                    | Figs 2c; ext2f; ext2g; ext6f        |
+| make\_gamma\_boxplot\_cinetique.R                    | Compute the speed for gammaH2AX progression over TAds and show distance distribution over time.                     | Figs ext5b                          |
+| make\_4Cseq\_barplot.R                               | Compute differential 4C-seq signal (log2 +DSB/-DSB) on 1mb around DSBs viewpoints.                                  | Figs 4c; ext3d; ext3h               |
+| make\_chipseq\_barplot\_TADs.R                       | Compute ChIP-seq quantification within the damaged TAD and neighboring TADs.                                        | Figs ext1f                          |
+| make\_chipseq\_boxplot\_cohesine.R                   | Compute signal over cohesine peaks.                                                                                 | Figs ext6b                          |
+| make\_chipseq\_boxplot\_profile.R                    | Compute signal over DSBs and produce some profiles/boxplots.                                                        | Figs ext1d; ext1k; 2e; ext2b; ext7b |
+| make\_HiC\_heatmap.R                                 | Compute average heatmaps from HiC dumped matrixes (juicer) and HiTC.                                                | Figs 2b; 2d; 2g; ext2d; ext2e       |
+| make\_HiTC.R                                         | Produce HiTC format from dumped matrix to be loaded in R.                                                           |                                     |
+| make\_loopanchor\_chipseq\_boxplot\_over\_distance.R | Compute the quantification of SCC1 recruitment on loop anchors at different distances from DSBs.                    | Figs ext6d                          |
+| make\_loopanchor\_chipseq\_boxplot.R                 | Compute the ChIP-seq signal on loop anchors.                                                                        | Figs ext7c                          |
+| make\_loopanchor\_HiC\_boxplot.R                     | Compute the differential loop strength in undamaged or damaged TADs                                                 | Figs ext6g                          |
+| plot\_gH2AX\_TADborder.R                             | Compute average gammaH2AX profile centered to the closest TAD border to the DSBs.                                   | Figs 1e                             |
