@@ -1,0 +1,51 @@
+# Raphael Mourad
+# 15/02/2018
+
+
+
+
+
+
+##################################################
+# Human
+res=50000
+reskb=50kb
+is=800000
+ids=100000
+
+res=25000
+reskb=25kb
+is=400000
+ids=50000
+
+res=10000
+reskb=10kb
+is=160000
+ids=20000
+
+
+
+for expe in DIvA_manipA OHT_manipA DIvA_manipB OHT_manipB
+do
+for chr in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X
+do
+cd /media/mourad/diskSave/MCF_Toulouse/recherche/LegubeTeam/data/HiC_Legube/matrix/
+perl /media/mourad/diskSave/MCF_Toulouse/recherche/programs/crane-nature-2015/scripts/matrix2insulation.pl -i dump_observed_KR_${expe}_chr${chr}_${reskb}.matrix.gz -is $is -ids $ids -im mean -bmoe 3 -nt 0.1 -v
+isc=`expr $is + 1`
+idsc=`expr $ids + 1`
+sed -i -e "s/NA/0/g" dump_observed_KR_${expe}_chr${chr}_${reskb}.is$isc.ids$idsc.insulation.bedGraph
+done
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
