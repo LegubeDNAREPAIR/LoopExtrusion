@@ -1,0 +1,94 @@
+---
+output: github_document
+---
+
+# LoopExtrusion
+Loop extrusion as a mechanism for DNA Double-Strand Breaks repair foci formation
+
+## Overview
+
+This is the github repository of our paper [Loop extrusion as a mechanism for DNA Double-Strand Breaks repair foci formation](https://www.biorxiv.org/content/10.1101/2020.02.12.945311v1).
+
+## Data Availability
+
+High throughput sequencing data have been deposited to Array Express under accession number [E-MTAB-8851](https://www.ebi.ac.uk/arrayexpress/experiments/E-MTAB-8851/). ChIP-chip data have been deposited to Array Express under accession number [E-MTAB-8793](https://www.ebi.ac.uk/arrayexpress/experiments/E-MTAB-8793/). Other data and source codes are available upon request.
+
+## System requirements
+
+### Alignment
+
+The workflow was written with snakemake (python), and need some genomic tools : 
+
+* `bwa 0.7.12-r1039`.
+* `samtools 1.9`.
+* `FastQC v0.11.5`.
+* `macs2 2.1.2`.
+* `bedtools v2.26.0`.
+* `deeptools 3.4.3`.
+* `R version 3.6.3`.
+
+### Figure generation
+
+the scripts were written with `R`, and need some packages : 
+
+* `library(rtracklayer)`.
+* `library(BSgenome.Hsapiens.UCSC.hg19)`.
+* `library(ggplot2)`.
+* `library(reshape2)`.
+* `library(dplyr)`.
+* `library(Homo.sapiens)`.
+
+
+```{r define, echo=F, message=FALSE, warning=FALSE}
+require(tidyverse)
+require(kableExtra)
+datatools <- tibble(
+    "Scripts"=c("analysis_Virtual4C_DSB.R",                       
+                "insulation_score_profil.R",    
+                "make_APA_heatmap.R",
+                "make_4Cseq_barplot.R",                           
+                "make_chipseq_barplot_TADs.R",                    
+                "make_chipseq_boxplot_cohesine.R",                
+                "make_chipseq_boxplot_profile.R",                 
+                "make_HiC_heatmap.R",                             
+                "make_HiTC.R",                                    
+                "make_loopanchor_chipseq_boxplot_over_distance.R",
+                "make_loopanchor_chipseq_boxplot.R",              
+                "make_loopanchor_HiC_boxplot.R",                  
+                "plot_gH2AX_TADborder.R"
+),
+    "Description"=c("",
+                    "",
+                    "Get the APA from juicer tools and produce graphics with ggplot2.",
+                    "Compute differential 4C-seq signal (log2 +DSB/-DSB) on 1mb around DSBs viewpoints.",
+                    "Compute ChIP-seq quantification within the damaged TAD and neighboring TADs.",
+                    "Compute signal over cohesine peaks.",
+                    "Compute signal over DSBs and produce some profiles/boxplots.",
+                    "Compute average heatmaps from HiC dumped matrixes (juicer) and HiTC.",
+                    "Produce HiTC format from dumped matrix to be loaded in R.",
+                    "Compute the quantification of SCC1 recruitment on loop anchors at different distances from DSBs.",
+                    "Compute the ChIP-seq signal on loop anchors.",
+                    "Compute the differential loop strength in undamaged or damaged TADs",
+                    "Compute average gammaH2AX profile centered to the closest TAD border to the DSBs."),
+    "Figures"=c("",
+                    "",
+                    "Figs 2c; ext2f; ext2g; ext6f",
+                    "Figs 4c; ext3d; ext3h",
+                    "Figs ext1f",
+                "Figs ext6b",
+                "Figs ext1d; ext1k; 2e; ext2b; ext7b",
+                "Figs 2b; 2d; 2g; ext2d; ext2e",
+                "",
+                "Figs ext6d",
+                "Figs ext7c",
+                "Figs ext6g",
+                "Figs 1e")
+)
+
+```
+
+```{r show1,echo=F}
+datatools %>% kable(caption = "",format="markdown",escape=F) 
+```
+
+
