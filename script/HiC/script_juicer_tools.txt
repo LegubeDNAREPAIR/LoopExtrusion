@@ -1,0 +1,141 @@
+# Raphael Mourad
+# 06/09/2019
+
+
+
+cd /media/mourad/diskSave/MCF_Toulouse/recherche/LegubeTeam
+
+dataFolder=data/HiC_Legube/
+exps=( DIvA_manipA DIvA_manipB OHT_manipA OHT_manipB )
+
+
+
+# Arrowhead domains
+res=100000 # below 25000, too few domains
+for exp in ${exps[*]}; do
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar arrowhead --ignore_sparsity -m 2000 -r $res -k KR ${dataFolder}/hic/${exp}/inter_30.hic ${dataFolder}/domain/arrowhead/${exp} 
+done
+
+
+
+# Loops
+res=10000,25000
+for exp in ${exps[*]}; do
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar hiccups --ignore_sparsity -m 512 -r $res -k KR -f .1 -p 2 -i 5 -t 0.02,1.5,1.75,2 -d 20000 ${dataFolder}/hic/${exp}/inter.hic ${dataFolder}loop/hiccups/${exp}
+done
+
+
+
+# Compartments A/B
+res=50000
+for exp in ${exps[*]}; do
+mkdir ${dataFolder}compartmentAB/${exp}
+for chr in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X; do
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar eigenvector -p KR ${dataFolder}/hic/${exp}/inter_30.hic ${chr} BP $res ${dataFolder}compartmentAB/${exp}/eigen_${exp}_${res}_chr${chr}.txt
+done
+done
+
+
+
+## Differential analysis
+# Loops
+res=10000,25000
+for k in A B; do
+java -jar ../programs/juicer_tools.1.8.9_jcuda.0.8.jar hiccupsdiff -m 512 -k KR -f .1 -p 2 -i 5 -t 0.02,1.5,1.75,2 -d 20000 ${dataFolder}/hic/DIvA_manip${k}/inter.hic ${dataFolder}/hic/OHT_manip${k}/inter.hic ${dataFolder}loop/hiccups/DIvA_manip${k}/merged_loops ${dataFolder}loop/hiccups/OHT_manip${k}/merged_loops ${dataFolder}loopdiff/hiccups/manip${k}
+done
+
+
+# APA
+k=A
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/DIvA_manip${k}/merged_loops results/HiC/APA/loops_DIvA_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/DIvA_manip${k}/merged_loops results/HiC/APA/loops_DIvA_manip${k}_OHT
+
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/OHT_manip${k}/merged_loops results/HiC/APA/loops_OHT_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/OHT_manip${k}/merged_loops results/HiC/APA/loops_OHT_manip${k}_OHT
+
+
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_DIvA_200kb_manip${k}.bed results/HiC/APA/loops_DIvA_200kb_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_OHT_200kb_manip${k}.bed results/HiC/APA/loops_OHT_200kb_manip${k}_OHT
+
+
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_all_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_all_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_all_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_all_manip${k}_OHT
+
+
+# APA all loops (damaged / undamaged TADs)
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_damaged_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_damaged_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_damaged_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_damaged_manip${k}_OHT
+
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_notdamaged_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_notdamaged_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_notdamaged_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_notdamaged_manip${k}_OHT
+
+# APA loop size
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_small_DIvA_OHT_notdamaged_manip${k}.bed results/HiC/APA/loops_small_DIvA_OHT_notdamaged_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_small_DIvA_OHT_notdamaged_manip${k}.bed results/HiC/APA/loops_small_DIvA_OHT_notdamaged_manip${k}_OHT
+
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_big_DIvA_OHT_notdamaged_manip${k}.bed results/HiC/APA/loops_big_DIvA_OHT_notdamaged_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_big_DIvA_OHT_notdamaged_manip${k}.bed results/HiC/APA/loops_big_DIvA_OHT_notdamaged_manip${k}_OHT
+
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_verysmall_DIvA_OHT_notdamaged_manip${k}.bed results/HiC/APA/loops_verysmall_DIvA_OHT_notdamaged_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_verysmall_DIvA_OHT_notdamaged_manip${k}.bed results/HiC/APA/loops_verysmall_DIvA_OHT_notdamaged_manip${k}_OHT
+
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_verybig_DIvA_OHT_notdamaged_manip${k}.bed results/HiC/APA/loops_verybig_DIvA_OHT_notdamaged_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_verybig_DIvA_OHT_notdamaged_manip${k}.bed results/HiC/APA/loops_verybig_DIvA_OHT_notdamaged_manip${k}_OHT
+
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_smallcoline_DIvA_OHT_notdamaged_manip${k}.bed results/HiC/APA/loops_smallcoline_DIvA_OHT_notdamaged_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_smallcoline_DIvA_OHT_notdamaged_manip${k}.bed results/HiC/APA/loops_smallcoline_DIvA_OHT_notdamaged_manip${k}_OHT
+
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_mediumcoline_DIvA_OHT_notdamaged_manip${k}.bed results/HiC/APA/loops_mediumcoline_DIvA_OHT_notdamaged_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_mediumcoline_DIvA_OHT_notdamaged_manip${k}.bed results/HiC/APA/loops_mediumcoline_DIvA_OHT_notdamaged_manip${k}_OHT
+
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_bigcoline_DIvA_OHT_notdamaged_manip${k}.bed results/HiC/APA/loops_bigcoline_DIvA_OHT_notdamaged_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_bigcoline_DIvA_OHT_notdamaged_manip${k}.bed results/HiC/APA/loops_bigcoline_DIvA_OHT_notdamaged_manip${k}_OHT
+
+
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_small_DIvA_OHT_damaged_manip${k}.bed results/HiC/APA/loops_small_DIvA_OHT_damaged_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_small_DIvA_OHT_damaged_manip${k}.bed results/HiC/APA/loops_small_DIvA_OHT_damaged_manip${k}_OHT
+
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_big_DIvA_OHT_damaged_manip${k}.bed results/HiC/APA/loops_big_DIvA_OHT_damaged_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_big_DIvA_OHT_damaged_manip${k}.bed results/HiC/APA/loops_big_DIvA_OHT_damaged_manip${k}_OHT
+
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_verysmall_DIvA_OHT_damaged_manip${k}.bed results/HiC/APA/loops_verysmall_DIvA_OHT_damaged_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_verysmall_DIvA_OHT_damaged_manip${k}.bed results/HiC/APA/loops_verysmall_DIvA_OHT_damaged_manip${k}_OHT
+
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_verybig_DIvA_OHT_damaged_manip${k}.bed results/HiC/APA/loops_verybig_DIvA_OHT_damaged_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_verybig_DIvA_OHT_damaged_manip${k}.bed results/HiC/APA/loops_verybig_DIvA_OHT_damaged_manip${k}_OHT
+
+
+# APA loops overlap AsiSI
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_overlapAsiSI_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_overlapAsiSI_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_overlapAsiSI_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_overlapAsiSI_manip${k}_OHT
+
+# APA loop anchor with AsiSI
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_anchorLeftAsiSI_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_anchorLeftAsiSI_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_anchorLeftAsiSI_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_anchorLeftAsiSI_manip${k}_OHT
+
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_500kb_anchorLeftAsiSI_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_500kb_anchorLeftAsiSI_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_500kb_anchorLeftAsiSI_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_500kb_anchorLeftAsiSI_manip${k}_OHT
+
+# APA loops 500kb on the left from AsiSI
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_500kbfromAsiSI_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_500kbfromAsiSI_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_500kbfromAsiSI_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_500kbfromAsiSI_manip${k}_OHT
+
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_500kb_500kbfromAsiSI_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_500kb_500kbfromAsiSI_manip${k}_DIvA
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_500kb_500kbfromAsiSI_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_500kb_500kbfromAsiSI_manip${k}_OHT
+
+for siRNA in CTRLDIvA CTRLOHT siSCC1DIvA siSCC1OHT; do
+k=A
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -n 10 -u -r 10000,25000 -k KR ${dataFolder}/hic/siHiC/${siRNA}.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_500kbfromAsiSI_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_500kbfromAsiSI_manip_${siRNA}
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/siHiC/${siRNA}.hic data/HiC_Legube/loop/hiccups/loops_DIvA_OHT_anchorLeftAsiSI_manip${k}.bed results/HiC/APA/loops_DIvA_OHT_anchorLeftAsiSI_manip_${siRNA}
+done
+
+
+# Loops at CTCF peak pairs
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/DIvA_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_CTCF.bed results/HiC/APA/loops_CTCF_manip${k}_DIvA
+
+java -jar ../programs/JUICER/juicer_tools_linux_0.8.jar APA -u -r 10000,25000 -k KR ${dataFolder}/hic/OHT_manip${k}/inter.hic data/HiC_Legube/loop/hiccups/loops_CTCF.bed results/HiC/APA/loops_CTCF_manip${k}_OHT
+
+
+
+
+

@@ -99,6 +99,14 @@ plot_telquel <-function(data.plot,my.quantile = 0.90,facet=TRUE,window = 1000000
     }
 }
 #Boxplot 4CSeq
+Get1valSum <- function(my.wigs,one.w,x){
+    lapply(split(x,droplevels(seqnames(x))),function(zz){
+        message(unique(as.character(seqnames(zz))))
+        cov <- one.w[[unique(as.character(seqnames(zz)))]]
+        score <- Views( cov, start = start(zz), end = end(zz) ) %>% sum()
+        tibble(wig = my.wigs,value = score,rowname = zz$name)
+    }) %>% bind_rows()
+}
 Get1val <- function (Name, one.w, x) 
 {
     require(magrittr)
