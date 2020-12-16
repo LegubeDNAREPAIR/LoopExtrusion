@@ -1,11 +1,12 @@
 from snakemake.utils import R
 THREADS = 3
-RAW_PATH = "/mnt/NAS1/DATA/HIGH_THROUGHPUT_GENOMICS_DIvA/4C-seq/4CSeq_PROCESS_VINCENT/RAW/"
-DEMULTIPLEX_PATH = "/mnt/NAS1/DATA/HIGH_THROUGHPUT_GENOMICS_DIvA/4C-seq/4CSeq_PROCESS_VINCENT/DEMULTIPLEXING/"
-OUT_PATH = "../4C_ALN_TRANS"
+RAW_PATH = ""
+DEMULTIPLEX_PATH = "DEMULTIPLEXING/"
+OUT_PATH = "4C_ALN_TRANS"
 EXTENSION = ".fastq.gz"
-GENOME="/mnt/NAS1/DATA/DATA_FROM_OTHER_LABS_and_DATABASES/GENOMES/female.hg19/female.hg19.fa"
-
+GENOME="female.hg19.fa"
+PRIMERS_PATH="PRIMERS/"
+EXCLUDES_PATH="EXCLUDES/"
 #SCRIPTS
 demultiplex_script="demultiplex.py"
 make_frags="make_frags.R"
@@ -13,7 +14,7 @@ create_matrix_count="create_matrix_count.R"
 generate_bedGraph_smoothed="smoothData_adapted.R"
 generate_bedGraph_norm="normFrags.R"
 #PROCESS CONFIG
-PRIMERS_PATH="/mnt/NAS1/DATA/HIGH_THROUGHPUT_GENOMICS_DIvA/4C-seq/4CSeq_PROCESS_VINCENT/RAW/PRIMERS/"
+
 PRIMERS_FILES=[
 "primer_file_demultiplexing_mapping_A.FA",
 "primer_file_demultiplexing_mapping_C.FA",
@@ -33,332 +34,332 @@ for f in PRIMERS_FILES:
 	with open(PRIMERS_PATH+f) as file:
 		PRIMERS[f] = [line.strip().replace(">","") for line in file if line.startswith(">")]
 EXCLUDES = {}
-EXCLUDES_PATH="/mnt/NAS1/DATA/HIGH_THROUGHPUT_GENOMICS_DIvA/4C-seq/4CSeq_PROCESS_VINCENT/RAW/EXCLUDES/"
+
 for f in PRIMERS_FILES:
 	with open(EXCLUDES_PATH+f) as file:
 		EXCLUDES[f] = [line.strip() for line in file]
 
 
 INFO_FASTQ = {
-# "4C-Seq_C_Legube_1_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_C.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_C.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_C.FA"]
-# }
-# "4C-Seq_C_Legube_2_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_C.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_C.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_C.FA"]	
-# }
-# "4C-Seq_C_Legube_3_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_C.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_C.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_C.FA"]	
-# }
-# "4C-Seq_C_Legube_4_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_C.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_C.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_C.FA"]	
-# }
-# "4C-Seq-Dbis-Legube-Banque1_S1_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_C.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_C.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_C.FA"]	
-# }
-# "4C-Seq-Dbis-Legube-Banque2_S2_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_D.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_D.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_D.FA"]	
-# }
-# "4C-Seq-Dbis-Legube-Banque3_S3_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_D.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_D.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_D.FA"]		
-# }
-# "4C-Seq-Dbis-Legube-Banque4_S4_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_D.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_D.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_D.FA"]		
-# }
-# "4C-Seq-D-Legube-Banque1_S1_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_D.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_D.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_D.FA"]		
-# }
-# "4C-Seq-D-Legube-Banque2_S2_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_D.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_D.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_D.FA"]		
-# }
-# "4C-Seq-D-Legube-Banque3_S3_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_D.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_D.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_D.FA"]		
-# }
-# "4C-Seq-D-Legube-Banque4_S4_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_D.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_D.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_D.FA"]		
-# }
-# "4C-seq_E-Legube_1_S1_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_E.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_E.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_E.FA"]		
-# }
-# "4C-seq_E-Legube_2_S2_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_E.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_E.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_E.FA"]		
-# }
-# "4C-seq-F-Legube_1_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_F.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_F.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_F.FA"]	
-# }
-# "4C-seq-F-Legube_2_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_F.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_F.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_F.FA"]		
-# }
-# "4C-seq-F-Legube_3_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_F.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_F.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_F.FA"]		
-# }
-# "4C-seq-F-Legube_4_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_F.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_F.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_F.FA"]		
-# }
-# "4C-seq-F-Legube_5_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_F.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_F.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_F.FA"]		
-# }
-# "4C-seq-F-Legube_6_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_F.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_F.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_F.FA"]		
-# }
-# "4Cseq-LBCMCP-index1_S1_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_A.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_A.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_A.FA"]		
-# }
-# "4Cseq-LBCMCP-index2_S2_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_A.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_A.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_A.FA"]		
-# }
-# "LEGU-7_1_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_G.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_G.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_G.FA"]	
-# }
-# "LEGU-7_2_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_G.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_G.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_G.FA"]		
-# }
-# "LEGU-7_3_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_G.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_G.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_G.FA"]		
-# }
-# "LEGU-7_4_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_G.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_G.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_G.FA"]		
-# }
-# "LEGU-7_5_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_G.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_G.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_G.FA"]		
-# }
-# "LEGU-7_6_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_G.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_G.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_G.FA"]		
-# }
-# "LEGU-8_1_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_H.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_H.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_H.FA"]		
-# }
-# "LEGU-8_2_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_H.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_H.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_H.FA"]		
-# }
-# "LEGU-8_3_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_H.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_H.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_H.FA"]	
-# }
-# "LEGU-8_4_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_H.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_H.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_H.FA"]	
-# }
-# "LEGU-8_5_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_H.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_H.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_H.FA"]	
-# }
-# "LEGU-8_6_fastq_after_trimming":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_H.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_H.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_H.FA"]	
-# },
+"4C-Seq_C_Legube_1_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_C.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_C.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_C.FA"]
+}
+"4C-Seq_C_Legube_2_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_C.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_C.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_C.FA"]	
+}
+"4C-Seq_C_Legube_3_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_C.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_C.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_C.FA"]	
+}
+"4C-Seq_C_Legube_4_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_C.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_C.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_C.FA"]	
+}
+"4C-Seq-Dbis-Legube-Banque1_S1_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_C.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_C.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_C.FA"]	
+}
+"4C-Seq-Dbis-Legube-Banque2_S2_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_D.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_D.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_D.FA"]	
+}
+"4C-Seq-Dbis-Legube-Banque3_S3_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_D.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_D.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_D.FA"]		
+}
+"4C-Seq-Dbis-Legube-Banque4_S4_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_D.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_D.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_D.FA"]		
+}
+"4C-Seq-D-Legube-Banque1_S1_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_D.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_D.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_D.FA"]		
+}
+"4C-Seq-D-Legube-Banque2_S2_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_D.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_D.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_D.FA"]		
+}
+"4C-Seq-D-Legube-Banque3_S3_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_D.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_D.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_D.FA"]		
+}
+"4C-Seq-D-Legube-Banque4_S4_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_D.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_D.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_D.FA"]		
+}
+"4C-seq_E-Legube_1_S1_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_E.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_E.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_E.FA"]		
+}
+"4C-seq_E-Legube_2_S2_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_E.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_E.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_E.FA"]		
+}
+"4C-seq-F-Legube_1_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_F.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_F.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_F.FA"]	
+}
+"4C-seq-F-Legube_2_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_F.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_F.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_F.FA"]		
+}
+"4C-seq-F-Legube_3_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_F.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_F.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_F.FA"]		
+}
+"4C-seq-F-Legube_4_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_F.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_F.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_F.FA"]		
+}
+"4C-seq-F-Legube_5_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_F.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_F.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_F.FA"]		
+}
+"4C-seq-F-Legube_6_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_F.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_F.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_F.FA"]		
+}
+"4Cseq-LBCMCP-index1_S1_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_A.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_A.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_A.FA"]		
+}
+"4Cseq-LBCMCP-index2_S2_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_A.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_A.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_A.FA"]		
+}
+"LEGU-7_1_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_G.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_G.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_G.FA"]	
+}
+"LEGU-7_2_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_G.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_G.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_G.FA"]		
+}
+"LEGU-7_3_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_G.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_G.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_G.FA"]		
+}
+"LEGU-7_4_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_G.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_G.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_G.FA"]		
+}
+"LEGU-7_5_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_G.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_G.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_G.FA"]		
+}
+"LEGU-7_6_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_G.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_G.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_G.FA"]		
+}
+"LEGU-8_1_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_H.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_H.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_H.FA"]		
+}
+"LEGU-8_2_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_H.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_H.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_H.FA"]		
+}
+"LEGU-8_3_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_H.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_H.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_H.FA"]	
+}
+"LEGU-8_4_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_H.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_H.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_H.FA"]	
+}
+"LEGU-8_5_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_H.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_H.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_H.FA"]	
+}
+"LEGU-8_6_fastq_after_trimming":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_H.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_H.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_H.FA"]	
+},
 
-# "4C-Seq-K_6_S6_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]
-# 	},
-# "4C-Seq-K_5_S5_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]		
-# 	},
-# "4C-Seq-K_4_S4_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]		
-# 	},
-# "4C-Seq-K_3_S3_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]		
-# 	},
-# "4C-Seq-K_2_S2_all_R1_001_cutadapt":{
-			# "primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
-			# "viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
-			# "to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]		
-# 	},
-# "4C-Seq-K_1_S1_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]		
-# 	},
-# "4C_seq_J_index4_S4_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_J.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_J.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_J.FA"]		
-# 	},
-# "4C_seq_J_index3_S3_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_J.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_J.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_J.FA"]		
-# 	},
-# "4C_seq_J_index2_S2_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_J.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_J.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_J.FA"]		
-# 	},
-# "4C_seq_J_index1_S1_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_J.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_J.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_J.FA"]		
-# 	},
-# "4C_seq_I_index6_S6_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_I.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_I.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_I.FA"]		
-# 	},
-# "4C_seq_I_index5_S5_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_I.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_I.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_I.FA"]			
-# 	},
-# "4C_seq_I_index4_S4_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_I.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_I.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_I.FA"]			
-# 	},
-# "4C_seq_I_index3_S3_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_I.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_I.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_I.FA"]			
-# 	},
-# "4C_seq_I_index2_S2_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_I.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_I.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_I.FA"]			
-# 	},
-# "4C_seq_I_index1_S1_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_I.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_I.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_I.FA"]			
-# 	},
-# 
-# "4C-Seq-L_4_S4_all_R1_001_cutadapt":{
-			# "primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_L.FA",
-			# "viewpoint":PRIMERS["primer_file_demultiplexing_mapping_L.FA"],
-			# "to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_L.FA"]			
-	# },
-# "4C-Seq-L_3_S3_all_R1_001_cutadapt":{
-			# "primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_L.FA",
-			# "viewpoint":PRIMERS["primer_file_demultiplexing_mapping_L.FA"],
-			# "to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_L.FA"]			
-	# },
-# "4C-Seq-L_2_S2_all_R1_001_cutadapt":{
-			# "primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_L.FA",
-			# "viewpoint":PRIMERS["primer_file_demultiplexing_mapping_L.FA"],
-			# "to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_L.FA"]			
-	# },
-# "4C-Seq-L_1_S1_all_R1_001_cutadapt":{
-			# "primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_L.FA",
-			# "viewpoint":PRIMERS["primer_file_demultiplexing_mapping_L.FA"],
-			# "to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_L.FA"]			
-	# },
+"4C-Seq-K_6_S6_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]
+	},
+"4C-Seq-K_5_S5_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]		
+	},
+"4C-Seq-K_4_S4_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]		
+	},
+"4C-Seq-K_3_S3_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]		
+	},
+"4C-Seq-K_2_S2_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]		
+	},
+"4C-Seq-K_1_S1_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]		
+	},
+"4C_seq_J_index4_S4_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_J.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_J.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_J.FA"]		
+	},
+"4C_seq_J_index3_S3_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_J.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_J.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_J.FA"]		
+	},
+"4C_seq_J_index2_S2_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_J.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_J.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_J.FA"]		
+	},
+"4C_seq_J_index1_S1_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_J.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_J.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_J.FA"]		
+	},
+"4C_seq_I_index6_S6_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_I.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_I.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_I.FA"]		
+	},
+"4C_seq_I_index5_S5_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_I.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_I.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_I.FA"]			
+	},
+"4C_seq_I_index4_S4_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_I.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_I.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_I.FA"]			
+	},
+"4C_seq_I_index3_S3_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_I.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_I.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_I.FA"]			
+	},
+"4C_seq_I_index2_S2_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_I.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_I.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_I.FA"]			
+	},
+"4C_seq_I_index1_S1_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_I.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_I.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_I.FA"]			
+	},
+
+"4C-Seq-L_4_S4_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_L.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_L.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_L.FA"]			
+	},
+"4C-Seq-L_3_S3_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_L.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_L.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_L.FA"]			
+	},
+"4C-Seq-L_2_S2_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_L.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_L.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_L.FA"]			
+	},
+"4C-Seq-L_1_S1_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_L.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_L.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_L.FA"]			
+	},
 
 
-# "4Cseq_K_newseq_6_S9_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]
-# },
-# "4Cseq_K_newseq_5_S8_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]
-# },
-# "4Cseq_K_newseq_4_S7_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]
-# },
-# "4Cseq_K_newseq_3_S6_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]
-# },
-# "4Cseq_K_newseq_2_S5_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]
-# },
-# "4Cseq_K_newseq_1_S4_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]
-# }
-# "4Cseq_M1_S1_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_M.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_M.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_M.FA"]
-# },
+"4Cseq_K_newseq_6_S9_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]
+},
+"4Cseq_K_newseq_5_S8_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]
+},
+"4Cseq_K_newseq_4_S7_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]
+},
+"4Cseq_K_newseq_3_S6_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]
+},
+"4Cseq_K_newseq_2_S5_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]
+},
+"4Cseq_K_newseq_1_S4_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_K.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_K.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_K.FA"]
+}
+"4Cseq_M1_S1_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_M.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_M.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_M.FA"]
+},
 "4Cseq_M2_S2_all_R1_001_cutadapt":{
 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_M.FA",
 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_M.FA"],
 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_M.FA"]
 },
-# "4Cseq_M3_S3_all_R1_001_cutadapt":{
-# 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_M.FA",
-# 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_M.FA"],
-# 			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_M.FA"]
-# },
+"4Cseq_M3_S3_all_R1_001_cutadapt":{
+			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_M.FA",
+			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_M.FA"],
+			"to.exclude":EXCLUDES["primer_file_demultiplexing_mapping_M.FA"]
+},
 "4Cseq_M4_S4_all_R1_001_cutadapt":{
 			"primers":PRIMERS_PATH+"primer_file_demultiplexing_mapping_M.FA",
 			"viewpoint":PRIMERS["primer_file_demultiplexing_mapping_M.FA"],
@@ -403,11 +404,8 @@ def getConditionConditionName(wildcards):
 
 rule all:
 	input:
-		#expand(OUT_PATH+"/DE/{bin}/{viewpoint}_{bin}_{extend}_DE_{pval}_{cond}.tsv",viewpoint=['chr1:89455867-89456712', 'chr17:57168614-57169531', 'chr21:33251469-33252587', 'chr17:45759770-45760603'],bin=BINS,extend=EXTENSION_VIEW,pval=PVALS,cond=CONDITIONS.keys())
-		#expand(OUT_PATH+"/COUNTS/{viewpoint}_{extend}.tsv",viewpoint=FILE_BY_VIEWPOINT.keys(),extend=EXTENSION_VIEW,pval=PVALS,cond=CONDITIONS.keys())
 		expand(OUT_PATH+"/COUNTS/{viewpoint}.tsv",viewpoint=FILE_BY_VIEWPOINT.keys()),
 		expand(OUT_PATH+"/BAM/{prefix}.sorted.bai",prefix=FILES.keys()),
-		#expand(OUT_PATH+"/BIGWIG_SMOOTHED/{bin}/{prefix}_normalized_{bin}.bw",prefix=FILES.keys(),bin = [50000,20000,10000]),
 		expand(OUT_PATH+"/GAELLE_SMOOTHED/{bin}/{prefix}_normalized.{bin}.{sw}.bw",prefix=FILES.keys(),bin = [100000,50000,20000,5000,2000],sw = 200)
 
 rule demultiplex:

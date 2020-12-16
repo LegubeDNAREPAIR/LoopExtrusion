@@ -93,11 +93,45 @@ Cmd : `snakemake -s Snakefile`.
 
 ### Files
 
+  - `4Cseq/4C-seq_process_trans.snakefile` : main script for snakemake,
+    call all RULES and config file.
+  - `4Cseq/create_matrix_count.R` : script to get the 4C-seq reads count
+    matrix for each bins.
+  - `4Cseq/demultiplex.py` : demultiplex each viewpoint for each input
+    file.
+  - `4Cseq/favorite_gaelle_smooth.R` : smooth bigwig.
+  - `4Cseq/make_frags.R` : create the bed file for MboI and NlaIII motif
+    position.
+  - `4Cseq/normFrags.R` : normalize 4C-SEQ read counts.
+  - `4Cseq/smoothData_adapted.R` : smooth bedGraph.
+  - `4Cseq/EXCLUDES` : folder with position to exclude for each
+    viewpoint.
+  - `4Cseq/PRIMERS` : viewpoints and sequence primers.
+
 ### Minimal configuration
+
+Open `4Cseq/4C-seq_process_trans.snakefile` and change :
+
+  - `RAW_PATH` : path where the fastq files are located.
+  - `DEMULTIPLEX_PATH` : path were the fastq fiels will be
+    demultiplexed.
+  - `OUT_PATH` : where the output files will be written.
+  - `EXTENSION` : fastq extension.
+  - `GENOME` : genome location.
+  - `PRIMERS_PATH` : primers folder location.
+  - `EXCLUDES_PATH` : folder location of position to exclude for each
+    viewpoint.
+  - `PRIMERS_FILES` : list of primer files located in `PRIMERS_PATH`.
+  - `INFO_FASTQ` : for each input file, specify :
+      - `"primers"` : the corresponding primer file.
+      - `"viewpoint"` : the corresponding viewpoint from `PRIMERS`
+        dictionary.
+      - `"to.exclude"` : the corresponding region to exclude from
+        `EXCLUDES` dictionary.
 
 ### Run the workflow
 
-Cmd : `snakemake -s Snakefile`.
+Cmd : `snakemake -s 4C-seq_process_trans.snakefile`.
 
 ### Rulegraph
 
