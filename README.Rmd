@@ -73,7 +73,7 @@ datatools <- tibble(
     "Figures"=c("Figs 1d; ext1e",
                     "Figs 2c; ext2f; ext2g; ext6f",
                     "Figs ext5b",
-                    "Figs 4c; ext3d; ext3h",
+                    "Figs ext4c; ext3d; ext3h",
                     "Figs ext1f",
                 "Figs ext6b",
                 "Figs ext1d; ext1k; 2e; ext2b; ext7b",

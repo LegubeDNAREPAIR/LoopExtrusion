@@ -52,7 +52,7 @@ the scripts were written with `R`, and need some packages
 | plot\_4C\_withotherdata.R                            | Compute the HiC matrix / ChIP-seq gammaH2AX / 4C-seq / insulation score / TAD border / CTCF peaks for given regions | Figs 1d; ext1e                      |
 | make\_APA\_heatmap.R                                 | Get the APA from juicer tools and produce graphics with ggplot2.                                                    | Figs 2c; ext2f; ext2g; ext6f        |
 | make\_gamma\_boxplot\_cinetique.R                    | Compute the speed for gammaH2AX progression over TAds and show distance distribution over time.                     | Figs ext5b                          |
-| make\_4Cseq\_barplot.R                               | Compute differential 4C-seq signal (log2 +DSB/-DSB) on 1mb around DSBs viewpoints.                                  | Figs 4c; ext3d; ext3h               |
+| make\_4Cseq\_barplot.R                               | Compute differential 4C-seq signal (log2 +DSB/-DSB) on 1mb around DSBs viewpoints.                                  | Figs ext4c; ext3d; ext3h            |
 | make\_chipseq\_barplot\_TADs.R                       | Compute ChIP-seq quantification within the damaged TAD and neighboring TADs.                                        | Figs ext1f                          |
 | make\_chipseq\_boxplot\_cohesine.R                   | Compute signal over cohesine peaks.                                                                                 | Figs ext6b                          |
 | make\_chipseq\_boxplot\_profile.R                    | Compute signal over DSBs and produce some profiles/boxplots.                                                        | Figs ext1d; ext1k; 2e; ext2b; ext7b |
