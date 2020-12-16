@@ -36,10 +36,6 @@
 		],
 		"EXT":".fa"
 	},
-	"FASTQC":{
-		"qc_template":"/bioinfo_legube/NAS/DOSSIERS_PERSO/VINCENT/PIPELINES/R_SCRIPTS/TEMPLATES/multi-qc-report-flex.Rmd",
-		"multiqc_conf":"Clouaire_H3CH7BGXC.yaml"
-	},
 	"BWA":{
 		"custom":""
 	},
