@@ -8,7 +8,7 @@ def getGenome(wildcards):
 	return(GENOMES[config["GENERAL"]["INPUT"][wildcards.prefix]["GENOME"]])
 RULES_DIR="RULES/"
 
-include:RULES_DIR+"full_mapping_using_ctrl_genome"
+include:RULES_DIR+"full_mapping_using_ctrl_genome.rules"
 
 
 rule all:
