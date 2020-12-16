@@ -40,6 +40,12 @@
           - `"EXPERIMENT":"input_human"` the name of the file who
             correspond to the input experiment (human).
 
+> Notes: `bamCoverageScaleFactor` will use `CTRL` and `EXPERIMENT` input
+> files to normalize the reads count of each samples, given the formula
+> :
+
+\(\frac{(input_{ctrl}\times reads_{exp})}{(input_{exp}\times reads_{ctrl})}\)
+
 ### Run the workflow
 
 Cmd : `snakemake -s Snakefile`.
