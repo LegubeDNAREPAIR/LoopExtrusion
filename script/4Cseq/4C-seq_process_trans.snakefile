@@ -1,29 +1,19 @@
 from snakemake.utils import R
 THREADS = 3
-RAW_PATH = "/mnt/NAS/DATA/HIGH_THROUGHPUT_GENOMICS_DIvA/4C-seq/4CSeq_PROCESS_VINCENT/RAW/"
-DEMULTIPLEX_PATH = "/mnt/NAS/DATA/HIGH_THROUGHPUT_GENOMICS_DIvA/4C-seq/4CSeq_PROCESS_VINCENT/DEMULTIPLEXING/"
+RAW_PATH = "/mnt/NAS1/DATA/HIGH_THROUGHPUT_GENOMICS_DIvA/4C-seq/4CSeq_PROCESS_VINCENT/RAW/"
+DEMULTIPLEX_PATH = "/mnt/NAS1/DATA/HIGH_THROUGHPUT_GENOMICS_DIvA/4C-seq/4CSeq_PROCESS_VINCENT/DEMULTIPLEXING/"
 OUT_PATH = "../4C_ALN_TRANS"
 EXTENSION = ".fastq.gz"
-GENOME="/mnt/NAS/DATA/DATA_FROM_OTHER_LABS_and_DATABASES/GENOMES/female.hg19/female.hg19.fa"
+GENOME="/mnt/NAS1/DATA/DATA_FROM_OTHER_LABS_and_DATABASES/GENOMES/female.hg19/female.hg19.fa"
 
-CONDITIONS = {
-	"mvspOHT":{
-		"sample_name":["4C-Seq_C_Legube_1_fastq_after_trimming",
-		"4C-Seq_C_Legube_2_fastq_after_trimming",
-		"4C-Seq-D-Legube-Banque1_S1_all_R1_001_cutadapt",
-		"4C-Seq-D-Legube-Banque2_S2_all_R1_001_cutadapt"],
-		"condition":["mOHT_C","pOHT_C","mOHT_D","pOHT_D"]
-	}
-}
 #SCRIPTS
 demultiplex_script="demultiplex.py"
 make_frags="make_frags.R"
 create_matrix_count="create_matrix_count.R"
-makeDE="DE_processing_snakemake.R"
 generate_bedGraph_smoothed="smoothData_adapted.R"
 generate_bedGraph_norm="normFrags.R"
 #PROCESS CONFIG
-PRIMERS_PATH="/mnt/NAS/DATA/HIGH_THROUGHPUT_GENOMICS_DIvA/4C-seq/4CSeq_PROCESS_VINCENT/RAW/PRIMERS/"
+PRIMERS_PATH="/mnt/NAS1/DATA/HIGH_THROUGHPUT_GENOMICS_DIvA/4C-seq/4CSeq_PROCESS_VINCENT/RAW/PRIMERS/"
 PRIMERS_FILES=[
 "primer_file_demultiplexing_mapping_A.FA",
 "primer_file_demultiplexing_mapping_C.FA",
@@ -43,7 +33,7 @@ for f in PRIMERS_FILES:
 	with open(PRIMERS_PATH+f) as file:
 		PRIMERS[f] = [line.strip().replace(">","") for line in file if line.startswith(">")]
 EXCLUDES = {}
-EXCLUDES_PATH="/mnt/NAS/DATA/HIGH_THROUGHPUT_GENOMICS_DIvA/4C-seq/4CSeq_PROCESS_VINCENT/RAW/EXCLUDES/"
+EXCLUDES_PATH="/mnt/NAS1/DATA/HIGH_THROUGHPUT_GENOMICS_DIvA/4C-seq/4CSeq_PROCESS_VINCENT/RAW/EXCLUDES/"
 for f in PRIMERS_FILES:
 	with open(EXCLUDES_PATH+f) as file:
 		EXCLUDES[f] = [line.strip() for line in file]
@@ -536,7 +526,7 @@ rule generate_bedGraph_normalized:
 
 rule bedGraphToBigWig:
 	input:
-		chromsizes = "/mnt/NAS/DATA/DATA_FROM_OTHER_LABS_and_DATABASES/GENOMES/female.hg19/hg19.chrom.sizes",
+		chromsizes = "/mnt/NAS1/DATA/DATA_FROM_OTHER_LABS_and_DATABASES/GENOMES/female.hg19/hg19.chrom.sizes",
 		bedgraph = OUT_PATH+"/BEDGRAPH_NORMALIZED/{sample}_normalized.bedGraph"
 	output:
 		OUT_PATH+"/BIGWIG_NORMALIZED/{sample}_normalized.bw"
@@ -561,7 +551,7 @@ rule removeNA:
 
 rule bedGraphToBigWigSmoothed:
 	input:
-		chromsizes = "/mnt/NAS/DATA/DATA_FROM_OTHER_LABS_and_DATABASES/GENOMES/female.hg19/hg19.chrom.sizes",
+		chromsizes = "/mnt/NAS1/DATA/DATA_FROM_OTHER_LABS_and_DATABASES/GENOMES/female.hg19/hg19.chrom.sizes",
 		bedgraph = OUT_PATH+"/BIGWIG_SMOOTHED/{bin}/{sample}_normalized_{bin}_withoutna.bedGraph"
 	output:
 		OUT_PATH+"/BIGWIG_SMOOTHED/{bin}/{sample}_normalized_{bin}.bw"

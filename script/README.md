@@ -40,11 +40,12 @@
           - `"EXPERIMENT":"input_human"` the name of the file who
             correspond to the input experiment (human).
 
-> Notes: `bamCoverageScaleFactor` will use `CTRL` and `EXPERIMENT` input
-> files to normalize the reads count of each samples, given the formula
-> :
+**Notes:** `bamCoverageScaleFactor` will use `CTRL` and `EXPERIMENT`
+input files to normalize the reads count of each samples, given the
+formula
+:
 
-<img src="https://render.githubusercontent.com/render/math?math=\frac{(input_{ctrl}\times reads_{exp})}{(input_{exp}\times reads_{ctrl})}" height="100" width="500">
+<img src="https://render.githubusercontent.com/render/math?math=\frac{(input_{ctrl}\times reads_{exp})}{(input_{exp}\times reads_{ctrl})}" height="50" width="250">
 
 ### Run the workflow
 
@@ -87,3 +88,17 @@ Cmd : `snakemake -s Snakefile`.
 ### Rulegraph
 
 ![rulegraph](ChIP-Seq/classic/rulegraph_chipseq.png)
+
+## 4C-SEQ workflow
+
+### Files
+
+### Minimal configuration
+
+### Run the workflow
+
+Cmd : `snakemake -s Snakefile`.
+
+### Rulegraph
+
+![rulegraph](4Cseq/rulegraph.svg)
