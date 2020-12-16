@@ -44,7 +44,7 @@
 > files to normalize the reads count of each samples, given the formula
 > :
 
-<img src="https://render.githubusercontent.com/render/math?math=\frac{(input_{ctrl}\times reads_{exp})}{(input_{exp}\times reads_{ctrl})}"height="100" width="500">
+<img src="https://render.githubusercontent.com/render/math?math=\frac{(input_{ctrl}\times reads_{exp})}{(input_{exp}\times reads_{ctrl})}" height="100" width="500">
 
 ### Run the workflow
 
